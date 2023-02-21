@@ -19,7 +19,7 @@ public class DataLoading {
             Class.forName("com.mysql.cj.jdbc.Driver");
             // Setup the connection with the DB
             connect = DriverManager
-                    .getConnection("jdbc:mysql://localhost:3306/database_3311", "root", "Ai1130611!");
+                    .getConnection("jdbc:mysql://localhost:3306/database_3311", "root", "");
 
             // Statements allow to issue SQL queries to the database
             Statement stmnt = connect.createStatement();
