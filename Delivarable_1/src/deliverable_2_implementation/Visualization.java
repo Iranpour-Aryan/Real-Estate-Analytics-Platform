@@ -31,12 +31,20 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.util.TableOrder;
 public class Visualization{
+	private ArrayList<String> visualizationOptions;
 	protected ArrayList<Visualization> visualization;
 	protected int index;
 	
 	
 	public Visualization() {
 		this.visualization = new ArrayList<Visualization>();
+//		this.visualizationOptions = new ArrayList<>
+//		visualizationOptions.add("Barchart");
+//		visualizationOptions.add("LineChart");
+//		visualizationOptions.add("Piechart");
+//		visualizationOptions.add("TimeSerie");
+//		visualizationOptions.add("ScatterChart");
+//		visualizationOptions.add("");
 	}
 	
 	public void createChart(JPanel west) {

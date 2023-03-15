@@ -42,6 +42,7 @@ public class UserInterface extends JFrame implements ActionListener{
 	JComboBox<String> fromListMonths;
 	JComboBox<String> toListYears;
 	JComboBox<String> toListMonths;
+	JButton addAdditionalParameters;
 	
 	JPanel west;
 	Visualization piechart;
@@ -83,6 +84,9 @@ public class UserInterface extends JFrame implements ActionListener{
 		fromListMonths = new JComboBox<String>(months);
 		toListYears = new JComboBox<String>(years);
 		toListMonths = new JComboBox<String>(months);
+		
+		addAdditionalParameters = new JButton("Add additional parameters");
+		addAdditionalParameters.addActionListener(this);
 
 		JPanel north = new JPanel();
 		north.add(chooseGeoParameter);

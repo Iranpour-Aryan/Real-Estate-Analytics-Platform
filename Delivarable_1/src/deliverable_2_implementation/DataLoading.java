@@ -13,8 +13,11 @@ public class DataLoading {
     private Statement statement = null;
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
+    Table table;
+    DataForRegion dataForRegion;
     
     public DataLoading() throws Exception {
+    	
     	 Class.forName("com.mysql.cj.jdbc.Driver");
          // Setup the connection with the DB
          connect = DriverManager
@@ -38,7 +41,7 @@ public class DataLoading {
                     		+ " INTO TABLE NHPI "
                     		+ " FIELDS TERMINATED BY ',' "
                     		+ " ENCLOSED BY '\"'"
-                    		+ " LINES TERMINATED BY '\n'"
+                    		+ " LINES TERMINATED BY '\r\n'"
                     		+ " IGNORE 1 ROWS;");
 
         } catch (Exception e) {
@@ -60,36 +63,10 @@ public class DataLoading {
         }
         return countries;
     }
-    
-    public void getStartID(String region, String startMonth, String startYear, String endMonth, String endYear)throws SQLException{
-    	Statement stm = connect.createStatement();
-    	String sql = "select min(countid) from nhpi where geo = '" + region + "' AND REF_DATE = '" + startMonth + "-" + startYear.substring(2, 4) + "'";
-    	ResultSet rst;
-    	rst = stm.executeQuery(sql);
-    	String startID = "";
-    	while (rst.next()) {
-    		startID = rst.getString(1);
-        }
-    	System.out.println(startID);
-    	getEndID(region, startMonth, startYear, endMonth, endYear, startID);
-    }
 
-    private void getEndID(String region, String startMonth, String startYear, String endMonth, String endYear, String startID) throws SQLException {
-    	Statement stm = connect.createStatement();
-    	String sql = "select max(countid) from nhpi where geo = '" + region + "' AND REF_DATE = '" + endMonth + "-" + endYear.substring(2, 4) + "'";
-    	ResultSet rst;
-    	rst = stm.executeQuery(sql);
-    	String endID = "";
-    	while (rst.next()) {
-    		endID = rst.getString(1);
-        }
-    	getValues(region, startID, endID);
-		
-	}
-
-	private Vector<String> getValues(String region, String startID, String endID) throws SQLException {
+	public Vector<String> getValues(String region, String startDate, String endDate) throws SQLException {
 		Statement stm = connect.createStatement();
-        String sql = "select VALUE_ from nhpi where geo = '" + region + "' AND countid between '" + startID + "' AND '" + endID + "'";
+        String sql = "select VALUE_ from nhpi where geo = '" + region + "' AND REF_DATE >= '" + startDate + "' AND REF_DATE <= '" + endDate + "'";
         ResultSet rst;
         rst = stm.executeQuery(sql);
         Vector<String> values = new Vector<String>();
@@ -99,19 +76,29 @@ public class DataLoading {
         for(int i = 0; i < values.size(); i++) {
         	System.out.println(values.get(i));
         }
-        getDates(region, startID, endID);
+        dataForRegion = new DataForRegion();
+        dataForRegion.setRegion(region);
+        dataForRegion.setValues(values);
+        
+        table = new Table();
+        getDates(region, startDate, endDate);
         return values;
 		
 	}
-	private Vector<String> getDates(String region, String startID, String endID) throws SQLException {
+	public Vector<String> getDates(String region, String startDate, String endDate) throws SQLException {
 		Statement stm = connect.createStatement();
-        String sql = "select REF_DATE from nhpi where geo = '" + region + "' AND countid between '" + startID + "' AND '" + endID +"'";
+        String sql = "select REF_DATE from nhpi where geo = '" + region + "' AND REF_DATE >= '" + startDate + "' AND REF_DATE <= '" + endDate + "'";
         ResultSet rst;
         rst = stm.executeQuery(sql);
         Vector<String> dates = new Vector<String>();
         while (rst.next()) {
         	dates.add(rst.getString(1));
         }
+        for(int i = 0; i < dates.size(); i++) {
+        	System.out.println(dates.get(i));
+        }
+        dataForRegion.setDates(dates);
+        table.addData(dataForRegion);
         return dates;
 		
 	}
@@ -140,16 +127,5 @@ public class DataLoading {
 		d.readDataBase();
 	}
 
-	public Vector<String> getValues(String region, String startMonth, String startYear, String endMonth, String endYear) throws SQLException {
-		Statement stm = connect.createStatement();
-    	String sql = "select Value_ from nhpi where geo = " + region + " AND where REF_DATE between " + startMonth + "-" + startYear.substring(2, 4) + " AND " + endMonth + "-" + endYear.substring(2,4);
-    	ResultSet rst;
-    	rst = stm.executeQuery(sql);
-    	Vector<String> values = new Vector<String>();
-    	while (rst.next()) {
-            values.add(rst.getString(1));
-        }
-    	return values;
-	}
 
 }
