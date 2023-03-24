@@ -14,6 +14,7 @@ public class DataLoading {
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
     Table table;
+    Visualization visualization;
     DataForRegion dataForRegion;
     
     public DataLoading() throws Exception {
@@ -37,7 +38,7 @@ public class DataLoading {
             Statement stmnt = connect.createStatement();
             stmnt
                     .execute(
-                    		" LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/18100205.csv' "
+                    		" LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data.csv' "
                     		+ " INTO TABLE NHPI "
                     		+ " FIELDS TERMINATED BY ',' "
                     		+ " ENCLOSED BY '\"'"
@@ -77,6 +78,7 @@ public class DataLoading {
         	System.out.println(values.get(i));
         }
         dataForRegion = new DataForRegion();
+        visualization = new Visualization();
         dataForRegion.setRegion(region);
         dataForRegion.setValues(values);
         
@@ -98,6 +100,7 @@ public class DataLoading {
         	System.out.println(dates.get(i));
         }
         dataForRegion.setDates(dates);
+        visualization.addDataForRegion(dataForRegion);
         table.addData(dataForRegion);
         return dates;
 		

@@ -85,5 +85,9 @@ public class TimeSerie extends Visualization{
 		chartPanel.setBackground(Color.white);
 		west.add(chartPanel);
 	}
+	
+	public void createNewChart() {
+		
+	}
 
 }

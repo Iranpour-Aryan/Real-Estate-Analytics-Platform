@@ -34,10 +34,12 @@ public class Visualization{
 	private ArrayList<String> visualizationOptions;
 	protected ArrayList<Visualization> visualization;
 	protected int index;
+	private ArrayList<DataForRegion> dataRegion;
 	
 	
 	public Visualization() {
 		this.visualization = new ArrayList<Visualization>();
+		this.dataRegion = new ArrayList<DataForRegion>();
 //		this.visualizationOptions = new ArrayList<>
 //		visualizationOptions.add("Barchart");
 //		visualizationOptions.add("LineChart");
@@ -62,6 +64,18 @@ public class Visualization{
 	
 	public void remove(Visualization v) {
 		this.visualization.remove(v);
+	}
+	
+	public void addDataForRegion(DataForRegion data) {
+		this.dataRegion.add(data);
+	}
+
+	public ArrayList<DataForRegion> getDataRegion() {
+		return dataRegion;
+	}
+
+	public void setDataRegion(ArrayList<DataForRegion> dataRegion) {
+		this.dataRegion = dataRegion;
 	}
 	
 	

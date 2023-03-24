@@ -98,6 +98,7 @@ public class UserInterface extends JFrame implements ActionListener{
 		north.add(toListMonths);
 		north.add(toListYears);
 		north.add(load);
+		north.add(addAdditionalParameters);
 
 		// Set bottom bar
 		JButton recalculate = new JButton("Recalculate");
@@ -198,6 +199,12 @@ public class UserInterface extends JFrame implements ActionListener{
         	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
         			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
         			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
+        }
+        if(e.getSource() == addAdditionalParameters) {
+        	String additionalParam = viewsList.getSelectedItem().toString();
+        	if(additionalParam == "Time Series") {
+        		
+        	}
         }
     }
 
