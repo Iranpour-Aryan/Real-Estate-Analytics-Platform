@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -16,140 +17,36 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.time.Year;
 
 public class BarChart extends Visualization{
-	public JFrame frame;
 
-	public JFrame getFrame() {
-		return frame;
-	}
-
-	public void setFrame(JFrame frame) {
-		this.frame = frame;
-	}
-
-//	public void createChart(JPanel west) {
-//
-//		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-//		dataset.setValue(5.6, "Mortality/1000 births", "2018");
-//		dataset.setValue(5.7, "Mortality/1000 births", "2017");
-//		dataset.setValue(5.8, "Mortality/1000 births", "2016");
-//		dataset.setValue(5.8, "Mortality/1000 births", "2015");
-//		dataset.setValue(5.9, "Mortality/1000 births", "2014");
-//		dataset.setValue(6, "Mortality/1000 births", "2013");
-//		dataset.setValue(6.1, "Mortality/1000 births", "2012");
-//		dataset.setValue(6.2, "Mortality/1000 births", "2011");
-//		dataset.setValue(6.4, "Mortality/1000 births", "2010");
-//
-//		dataset.setValue(2.92, "Hospital beds/1000 people", "2018");
-//		dataset.setValue(2.87, "Hospital beds/1000 people", "2017");
-//		dataset.setValue(2.77, "Hospital beds/1000 people", "2016");
-//		dataset.setValue(2.8, "Hospital beds/1000 people", "2015");
-//		dataset.setValue(2.83, "Hospital beds/1000 people", "2014");
-//		dataset.setValue(2.89, "Hospital beds/1000 people", "2013");
-//		dataset.setValue(2.93, "Hospital beds/1000 people", "2012");
-//		dataset.setValue(2.97, "Hospital beds/1000 people", "2011");
-//		dataset.setValue(3.05, "Hospital beds/1000 people", "2010");
-//
-//		DefaultCategoryDataset dataset2 = new DefaultCategoryDataset();
-//
-//		dataset2.setValue(10623, "Health Expenditure per Capita", "2018");
-//		dataset2.setValue(10209, "Health Expenditure per Capita", "2017");
-//		dataset2.setValue(9877, "Health Expenditure per Capita", "2016");
-//		dataset2.setValue(9491, "Health Expenditure per Capita", "2015");
-//		dataset2.setValue(9023, "Health Expenditure per Capita", "2014");
-//		dataset2.setValue(8599, "Health Expenditure per Capita", "2013");
-//		dataset2.setValue(8399, "Health Expenditure per Capita", "2012");
-//		dataset2.setValue(8130, "Health Expenditure per Capita", "2011");
-//		dataset2.setValue(7930, "Health Expenditure per Capita", "2010");
-//
-//		CategoryPlot plot = new CategoryPlot();
-//		BarRenderer barrenderer1 = new BarRenderer();
-//		BarRenderer barrenderer2 = new BarRenderer();
-//
-//		plot.setDataset(0, dataset);
-//		plot.setRenderer(0, barrenderer1);
-//		CategoryAxis domainAxis = new CategoryAxis("Year");
-//		plot.setDomainAxis(domainAxis);
-//		plot.setRangeAxis(new NumberAxis(""));
-//
-//		plot.setDataset(1, dataset2);
-//		plot.setRenderer(1, barrenderer2);
-//		plot.setRangeAxis(1, new NumberAxis("US$"));
-//
-//		plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
-//		plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
-//
-//		JFreeChart barChart = new JFreeChart("Mortality vs Expenses & Hospital Beds",
-//				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
-//
-//
-//		ChartPanel chartPanel = new ChartPanel(barChart);
-//		chartPanel.setPreferredSize(new Dimension(400, 300));
-//		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-//		chartPanel.setBackground(Color.white);
-//		west.add(chartPanel);
-//	}
-	
-	public JPanel createNewChart() {
+	public JPanel createNewChart(ArrayList<DataForRegion> dataRegionList) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		dataset.setValue(5.6, "Mortality/1000 births", "2018");
-		dataset.setValue(5.7, "Mortality/1000 births", "2017");
-		dataset.setValue(5.8, "Mortality/1000 births", "2016");
-		dataset.setValue(5.8, "Mortality/1000 births", "2015");
-		dataset.setValue(5.9, "Mortality/1000 births", "2014");
-		dataset.setValue(6, "Mortality/1000 births", "2013");
-		dataset.setValue(6.1, "Mortality/1000 births", "2012");
-		dataset.setValue(6.2, "Mortality/1000 births", "2011");
-		dataset.setValue(6.4, "Mortality/1000 births", "2010");
-
-		dataset.setValue(2.92, "Hospital beds/1000 people", "2018");
-		dataset.setValue(2.87, "Hospital beds/1000 people", "2017");
-		dataset.setValue(2.77, "Hospital beds/1000 people", "2016");
-		dataset.setValue(2.8, "Hospital beds/1000 people", "2015");
-		dataset.setValue(2.83, "Hospital beds/1000 people", "2014");
-		dataset.setValue(2.89, "Hospital beds/1000 people", "2013");
-		dataset.setValue(2.93, "Hospital beds/1000 people", "2012");
-		dataset.setValue(2.97, "Hospital beds/1000 people", "2011");
-		dataset.setValue(3.05, "Hospital beds/1000 people", "2010");
-
-		DefaultCategoryDataset dataset2 = new DefaultCategoryDataset();
-
-		dataset2.setValue(10623, "Health Expenditure per Capita", "2018");
-		dataset2.setValue(10209, "Health Expenditure per Capita", "2017");
-		dataset2.setValue(9877, "Health Expenditure per Capita", "2016");
-		dataset2.setValue(9491, "Health Expenditure per Capita", "2015");
-		dataset2.setValue(9023, "Health Expenditure per Capita", "2014");
-		dataset2.setValue(8599, "Health Expenditure per Capita", "2013");
-		dataset2.setValue(8399, "Health Expenditure per Capita", "2012");
-		dataset2.setValue(8130, "Health Expenditure per Capita", "2011");
-		dataset2.setValue(7930, "Health Expenditure per Capita", "2010");
-
+		DataForRegion data = dataRegionList.get(dataRegionList.size() - 1);
+        int year = 0;
+        int nowYear = 0;
+        for(int i = 0; i < data.values.size(); i++) {
+        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+        	if(year != nowYear) {
+        		nowYear = year;
+        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
+        		dataset.setValue(avg, "Values for " + data.region, data.dates.get(i).substring(0, 4));
+        	}
+        }
 		CategoryPlot plot = new CategoryPlot();
 		BarRenderer barrenderer1 = new BarRenderer();
-		BarRenderer barrenderer2 = new BarRenderer();
 
 		plot.setDataset(0, dataset);
 		plot.setRenderer(0, barrenderer1);
 		CategoryAxis domainAxis = new CategoryAxis("Year");
 		plot.setDomainAxis(domainAxis);
-		plot.setRangeAxis(new NumberAxis(""));
-
-		plot.setDataset(1, dataset2);
-		plot.setRenderer(1, barrenderer2);
-		plot.setRangeAxis(1, new NumberAxis("US$"));
+		plot.setRangeAxis(new NumberAxis("Values"));
 
 		plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
 		plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
-		
-		frame = new JFrame("Simple Table Example");
 
-        // create scroll pane for wrapping the table and add
-        // it to the frame
-        frame.setSize(900, 600);
-        frame.setLayout(new BorderLayout());
-
-		JFreeChart barChart = new JFreeChart("Mortality vs Expenses & Hospital Beds",
+		JFreeChart barChart = new JFreeChart("Values for region "+ data.region,
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
 
@@ -160,10 +57,6 @@ public class BarChart extends Visualization{
 		
 		return chartPanel;
        	
-	}
-	
-	public void closeFrame() {
-		frame.dispose();
 	}
 
 }

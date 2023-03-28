@@ -22,7 +22,8 @@ public class DataLoading {
     	 Class.forName("com.mysql.cj.jdbc.Driver");
          // Setup the connection with the DB
          connect = DriverManager
-                 .getConnection("jdbc:mysql://localhost:3306/database_3311", "root", "Ai1130611!"); //third column for password
+                 .getConnection("jdbc:mysql://localhost:3306/database_3311", "root", "root1234"); //third column for password
+//         visualization = new Visualization();
 
     }
 
@@ -78,7 +79,6 @@ public class DataLoading {
         	System.out.println(values.get(i));
         }
         dataForRegion = new DataForRegion();
-        visualization = new Visualization();
         dataForRegion.setRegion(region);
         dataForRegion.setValues(values);
         
@@ -100,10 +100,8 @@ public class DataLoading {
         	System.out.println(dates.get(i));
         }
         dataForRegion.setDates(dates);
-        visualization.addDataForRegion(dataForRegion);
-        table.addData(dataForRegion);
+//        visualization.addDataForRegion(dataForRegion);
         return dates;
-		
 	}
 
 	// You need to close the resultSet
@@ -123,6 +121,18 @@ public class DataLoading {
         } catch (Exception e) {
 
         }
+    }
+    
+    public void addToTable() {
+    	table.addData(dataForRegion);
+    }
+    
+    public void setVisualization(Visualization setVis) {
+    	visualization = setVis;
+    }
+    
+    public void addToVisualization() {
+    	visualization.addDataForRegion(dataForRegion);
     }
     
     public static void main(String[] args) throws Exception {

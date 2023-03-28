@@ -24,16 +24,38 @@ public class Parameters {
         					+ this.endMonth +":" + this.endYear);
 		startDate = this.startYear + "-" + this.startMonth + "-1";
 		endDate = this.endYear + "-" + this.endMonth + "-1";
-		try {
-			
-			data = new DataLoading();
+//		try {	
+//			data = new DataLoading();
+//			System.out.println(this.region);
+//			data.getValues(this.region, this.startDate, this.endDate);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+	}
+	
+	public void storeData() {
+		try {	
+//			data = new DataLoading();
 			System.out.println(this.region);
 			data.getValues(this.region, this.startDate, this.endDate);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+	}
+	
+	public void sendToTable() {
+		data.addToTable();
+	}
+	
+	public void sendToVisualization() {
+		data.addToVisualization();
+	}
+	
+	public void setDataLoading(DataLoading dataLoading) {
+		data = dataLoading;
 	}
 
 
