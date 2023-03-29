@@ -39,13 +39,13 @@ public class Table {
 		constructData(dataRegion);
 
 		JFrame frame = new JFrame("Simple Table Example");
-//		frame.setSize(900, 600);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(400, 600);
 		
 		JTable table = new JTable(products, colName);
 		JScrollPane scrollTable = new JScrollPane(table);
 		
 		JPanel summaryTable = new JPanel(new GridLayout(3, 1));
+		summaryTable.setPreferredSize(new Dimension(400, 100));
 		Font font = new Font("Serif", Font.PLAIN, 20);
 	
 		JLabel avg = new JLabel("Average value: " + String.format("%.2f", avgVal));
@@ -68,18 +68,24 @@ public class Table {
 		min.setFont(font);
 		summaryTable.add(min);
 		
-		JPanel cards = new JPanel(new CardLayout());
-		cards.add(scrollTable);
-		cards.add(summaryTable);
 		
 		JPanel panel = new JPanel();
 		JButton button = new JButton("Switch");
 		button.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed (ActionEvent e) {
-		        CardLayout cl = (CardLayout)(cards.getLayout());
-		        cl.next(cards);
-		    }       
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if(frame.getContentPane().getComponent(1) == summaryTable) {
+					frame.remove(summaryTable);
+					frame.add(scrollTable, BorderLayout.CENTER);
+				} else {
+					frame.remove(scrollTable);
+					frame.add(summaryTable, BorderLayout.CENTER);
+				}
+				
+				frame.pack();
+			}
 		});
 		panel.add(button);
 		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), dataRegion.region,
@@ -89,13 +95,13 @@ public class Table {
 		// it to the frame
 		
 		frame.setLayout(new BorderLayout());
-		frame.add(cards, BorderLayout.CENTER);
 		frame.add(panel, BorderLayout.NORTH);
+		frame.add(scrollTable, BorderLayout.CENTER);
 		frame.setLocationRelativeTo(null);
 		frame.pack();
 		frame.setVisible(true);
-		
 	}
+	
 
 	private void constructData(DataForRegion dataRegion) {
 		int count = 0;

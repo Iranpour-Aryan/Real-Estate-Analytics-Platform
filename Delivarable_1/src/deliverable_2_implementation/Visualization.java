@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.jfree.chart.ChartFactory;
@@ -30,16 +31,15 @@ import org.jfree.data.time.Year;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.util.TableOrder;
-public class Visualization{
+public class Visualization extends JPanel{
 	private ArrayList<String> visualizationOptions;
 	protected ArrayList<Visualization> visualization;
 	protected int index;
-	private ArrayList<DataForRegion> dataRegion;
-	
+	protected ArrayList<DataForRegion> dataRegionList;	
 	
 	public Visualization() {
 		this.visualization = new ArrayList<Visualization>();
-		this.dataRegion = new ArrayList<DataForRegion>();
+		this.dataRegionList = new ArrayList<DataForRegion>();
 //		this.visualizationOptions = new ArrayList<>
 //		visualizationOptions.add("Barchart");
 //		visualizationOptions.add("LineChart");
@@ -62,20 +62,33 @@ public class Visualization{
 		return this.visualization;
 	}
 	
-	public void remove(Visualization v) {
+	public void removeVisualization(Visualization v) {
 		this.visualization.remove(v);
 	}
-	
+
 	public void addDataForRegion(DataForRegion data) {
-		this.dataRegion.add(data);
+		this.dataRegionList.add(data);
 	}
 
 	public ArrayList<DataForRegion> getDataRegion() {
-		return dataRegion;
+		return dataRegionList;
 	}
 
 	public void setDataRegion(ArrayList<DataForRegion> dataRegion) {
-		this.dataRegion = dataRegion;
+		this.dataRegionList = dataRegion;
+	}
+	
+	public JPanel createNewChart() {
+		JPanel panel = new JPanel();
+		return panel;
+	}
+	
+	public void closeFrame() {
+		
+	}
+	
+	public JPanel getPanel() {
+		return new JPanel();
 	}
 	
 	

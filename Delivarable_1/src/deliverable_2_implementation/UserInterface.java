@@ -17,6 +17,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -43,10 +44,13 @@ public class UserInterface extends JFrame implements ActionListener{
 	JComboBox<String> toListYears;
 	JComboBox<String> toListMonths;
 	JButton addAdditionalParameters;
+	int count = 0;
 	
 	JPanel west;
 	Visualization piechart;
 	Visualization visualization;
+	HashMap<String, Visualization> mapToVisualization; 
+	HashMap<String, JPanel> mapToPanel;
 	static JFrame frame;
 	private static UserInterface instance;
 
@@ -60,6 +64,10 @@ public class UserInterface extends JFrame implements ActionListener{
 	private UserInterface() throws Exception {
 		// Set window title
 		super("Country Statistics");
+		GridLayout gridLayout = new GridLayout(2, 2);
+        setLayout(gridLayout);
+		mapToVisualization = new HashMap<String, Visualization>();
+		mapToPanel = new HashMap<String, JPanel>();
 		// Set top bar
 		visualization = new Visualization();
 		JLabel chooseGeoParameter = new JLabel("Choose a geographical parameter: ");
@@ -111,11 +119,13 @@ public class UserInterface extends JFrame implements ActionListener{
 		viewsNames.add("Bar Chart");
 		viewsNames.add("Scatter Chart");
 		viewsNames.add("Report");
+		viewsNames.add("Time Series");
 		viewsList = new JComboBox<String>(viewsNames);
 		addView = new JButton("+");
 		removeView = new JButton("-");
 		addView.addActionListener(this);
 		removeView.addActionListener(this);
+		initMapping(); //init map
 		
 
 		JLabel methodLabel = new JLabel("        Choose analysis method: ");
@@ -145,54 +155,70 @@ public class UserInterface extends JFrame implements ActionListener{
 		// Set charts region
 		west = new JPanel();
 		west.setLayout(new GridLayout(2, 0));
-		createCharts(west);
 
 		getContentPane().add(north, BorderLayout.NORTH);
 		getContentPane().add(east, BorderLayout.EAST);
 		getContentPane().add(south, BorderLayout.SOUTH);
 		getContentPane().add(west, BorderLayout.WEST);
 	}
-
-	private void createCharts(JPanel west) {
+	
+	private void initMapping() {
 		piechart = new PieChart();
-		piechart.createChart(west);
+		mapToVisualization.put("Pie Chart", piechart);
 		Visualization barchart = new BarChart();
-		barchart.createChart(west);
+		mapToVisualization.put("Bar Chart", barchart);
 		Visualization scatterchart = new ScatterChart();
-		scatterchart.createChart(west);
+		mapToVisualization.put("Scatter Chart", scatterchart);
 		Visualization reportchart = new ReportChart();
-		reportchart.createChart(west);
+		mapToVisualization.put("Report", reportchart);
 		Visualization linechart = new LineChart();
-		linechart.createChart(west);
+		mapToVisualization.put("Line Chart", linechart);
 		Visualization timeseries = new TimeSerie();
-		timeseries.createChart(west);
-		visualization.addVisualization(piechart);
-		visualization.addVisualization(barchart);
-		visualization.addVisualization(scatterchart);
+		mapToVisualization.put("Time Series", timeseries);
 	}
 	
-	private void createAfterDeselect(JPanel west, Visualization vis_create) {
-		frame.getContentPane().removeAll();
-		frame.getContentPane().repaint();
+
+	
+	private void createAfterDeselect(JPanel west) {
 		ArrayList<Visualization> vis_list = visualization.getVisualization();
-		for(int i = 0; i < vis_list.size(); i++) {
-			vis_list.get(i).createChart(west);
+		if(count <=0) {
+			for(int i = 0; i < vis_list.size(); i++) {
+				vis_list.get(i).createNewChart();
+			}
 		}
+		count++;
 	}
 	
-	private void deselect(JPanel west, Visualization removedVis) {
-		if(removedVis instanceof PieChart) {
-			visualization.remove(removedVis);
+	
+	private void deselect(JPanel west, String visualization_value, Visualization vis_delete) {
+		JPanel remove_panel = mapToPanel.get(visualization_value);
+		this.remove(remove_panel);
+		visualization.removeVisualization(vis_delete);
+		this.revalidate();
+		this.repaint();
+	}
+	
+	private void select(JPanel west, String addValue, Visualization addVis) {
+		if(visualization.getVisualization().size() < 2) {
+			visualization.addVisualization(addVis);
+			JPanel holder = addVis.createNewChart();
+			this.add(holder, BorderLayout.WEST);
+			mapToPanel.put(addValue, holder);
+			this.validate();
 		}
-		this.createAfterDeselect(west, visualization);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
         if(e.getSource()==addView){
+        	String visualization_value = viewsList.getSelectedItem().toString();
+        	Visualization visualization_addition = mapToVisualization.get(visualization_value);
+        	select(west, visualization_value,visualization_addition);
             System.out.println(viewsList.getSelectedItem().toString());
         }
         if(e.getSource() == removeView) {
-        	deselect(west,piechart);
+        	String visualization_value = viewsList.getSelectedItem().toString();
+        	Visualization visualization_deletion = mapToVisualization.get(visualization_value);
+        	deselect(west,visualization_value, visualization_deletion);
         	System.out.println(viewsList.getSelectedItem().toString());
         }
         if(e.getSource() == load) {

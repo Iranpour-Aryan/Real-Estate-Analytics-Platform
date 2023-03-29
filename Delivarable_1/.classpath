@@ -6,10 +6,10 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/MySQL/Connector J 8.0/mysql-connector-j-8.0.32.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ASUS/Dropbox/PC/Documents/EECS/3311Project/ExternalJarFiles/commons-math3-3.4.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ASUS/Dropbox/PC/Documents/EECS/3311Project/ExternalJarFiles/commons-math3-3.4.1-javadoc.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ASUS/Dropbox/PC/Documents/EECS/3311Project/ExternalJarFiles/jcommon-1.0.23.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ASUS/Dropbox/PC/Documents/EECS/3311Project/ExternalJarFiles/jfreechart-1.0.19.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ASUS/Dropbox/PC/Documents/EECS/3311Project/ExternalJarFiles/mysql-connector-j-8.0.32.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

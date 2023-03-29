@@ -38,7 +38,7 @@ public class DataLoading {
             Statement stmnt = connect.createStatement();
             stmnt
                     .execute(
-                    		" LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data.csv' "
+                    		" LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data_values.csv' "
                     		+ " INTO TABLE NHPI "
                     		+ " FIELDS TERMINATED BY ',' "
                     		+ " ENCLOSED BY '\"'"
