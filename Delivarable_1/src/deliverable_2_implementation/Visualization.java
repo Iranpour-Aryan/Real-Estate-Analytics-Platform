@@ -78,7 +78,7 @@ public class Visualization extends JPanel{
 		this.dataRegionList = dataRegion;
 	}
 	
-	public JPanel createNewChart() {
+	public JPanel createNewChart(ArrayList<DataForRegion> arrayList) {
 		JPanel panel = new JPanel();
 		return panel;
 	}
@@ -88,6 +88,24 @@ public class Visualization extends JPanel{
 	}
 	
 	public JPanel getPanel() {
+		return new JPanel();
+	}
+	
+	public double getAverageForYear(DataForRegion data, int year) {
+		double sum = 0;
+		int count = 0;
+		for(int i = 0; i < data.values.size(); i++) {
+			if(Integer.parseInt(data.dates.get(i).substring(0, 4)) == year) {
+				sum += Double.parseDouble(data.values.get(i));
+				count++;
+			}
+		}
+		double avg = sum / count;
+		return avg;
+		
+	}
+	
+	public JPanel CreateAddData(ArrayList<DataForRegion> dataRegion) {
 		return new JPanel();
 	}
 	

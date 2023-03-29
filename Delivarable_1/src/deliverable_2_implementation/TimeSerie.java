@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -20,57 +21,29 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Year;
 
 public class TimeSerie extends Visualization{
-//	public JFrame frame;
-//
-//	public JFrame getFrame() {
-//		return frame;
-//	}
-//
-//	public void setFrame(JFrame frame) {
-//		this.frame = frame;
-//	}
+	TimeSeriesCollection dataset;
+	XYPlot plot;
+	JFreeChart chart;
+	int firstNum = 0;
+	int secondNum = 0;
+	public JPanel createNewChart(ArrayList<DataForRegion> dataRegionList) {
+        DataForRegion data = dataRegionList.get(dataRegionList.size() - 1);
+        TimeSeries series1 = new TimeSeries("Values for Region" + data.region);
+        int year = 0;
+        int nowYear = 0;
+        for(int i = 0; i < data.values.size(); i++) {
+        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+        	if(year != nowYear) {
+        		nowYear = year;
+        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
+        		series1.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+        	}
+        }
 
-	public void createChart(JPanel west) {
-		TimeSeries series1 = new TimeSeries("Mortality/1000 births");
-		series1.add(new Year(2018), 5.6);
-		series1.add(new Year(2017), 5.7);
-		series1.add(new Year(2016), 5.8);
-		series1.add(new Year(2015), 5.8);
-		series1.add(new Year(2014), 5.9);
-		series1.add(new Year(2013), 6.0);
-		series1.add(new Year(2012), 6.1);
-		series1.add(new Year(2011), 6.2);
-		series1.add(new Year(2010), 6.4);
-
-		TimeSeries series2 = new TimeSeries("Health Expenditure per Capita");
-		series2.add(new Year(2018), 10624);
-		series2.add(new Year(2017), 10209);
-		series2.add(new Year(2016), 9877);
-		series2.add(new Year(2015), 9491);
-		series2.add(new Year(2014), 9023);
-		series2.add(new Year(2013), 8599);
-		series2.add(new Year(2012), 8399);
-		series2.add(new Year(2011), 8130);
-		series2.add(new Year(2010), 7930);
-		TimeSeriesCollection dataset2 = new TimeSeriesCollection();
-		dataset2.addSeries(series2);
-
-		TimeSeries series3 = new TimeSeries("Hospital Beds/1000 people");
-		series3.add(new Year(2018), 2.92);
-		series3.add(new Year(2017), 2.87);
-		series3.add(new Year(2016), 2.77);
-		series3.add(new Year(2015), 2.8);
-		series3.add(new Year(2014), 2.83);
-		series3.add(new Year(2013), 2.89);
-		series3.add(new Year(2012), 2.93);
-		series3.add(new Year(2011), 2.97);
-		series3.add(new Year(2010), 3.05);
-
-		TimeSeriesCollection dataset = new TimeSeriesCollection();
+		dataset = new TimeSeriesCollection();
 		dataset.addSeries(series1);
-		dataset.addSeries(series3);
 
-		XYPlot plot = new XYPlot();
+		plot = new XYPlot();
 		XYSplineRenderer splinerenderer1 = new XYSplineRenderer();
 		XYSplineRenderer splinerenderer2 = new XYSplineRenderer();
 
@@ -78,89 +51,14 @@ public class TimeSerie extends Visualization{
 		plot.setRenderer(0, splinerenderer1);
 		DateAxis domainAxis = new DateAxis("Year");
 		plot.setDomainAxis(domainAxis);
-		plot.setRangeAxis(new NumberAxis(""));
+		plot.setRangeAxis(new NumberAxis("Values"));
 
-		plot.setDataset(1, dataset2);
-		plot.setRenderer(1, splinerenderer2);
-		plot.setRangeAxis(1, new NumberAxis("US$"));
+		plot.mapDatasetToRangeAxis(firstNum, secondNum);// 1st dataset to 1st y-axis
+		firstNum++;
+		secondNum++;
+//		plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
 
-		plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
-		plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
-
-		JFreeChart chart = new JFreeChart("Mortality vs Expenses & Hospital Beds",
-				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
-
-		ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new Dimension(400, 300));
-		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-		chartPanel.setBackground(Color.white);
-		west.add(chartPanel);
-	}
-	
-	public JPanel createNewChart() {
-//		frame = new JFrame("Simple Table Example");
-//
-//        // create scroll pane for wrapping the table and add
-//        // it to the frame
-//        frame.setSize(900, 600);
-//        frame.setLayout(new BorderLayout());
-        TimeSeries series1 = new TimeSeries("Mortality/1000 births");
-		series1.add(new Year(2018), 5.6);
-		series1.add(new Year(2017), 5.7);
-		series1.add(new Year(2016), 5.8);
-		series1.add(new Year(2015), 5.8);
-		series1.add(new Year(2014), 5.9);
-		series1.add(new Year(2013), 6.0);
-		series1.add(new Year(2012), 6.1);
-		series1.add(new Year(2011), 6.2);
-		series1.add(new Year(2010), 6.4);
-
-		TimeSeries series2 = new TimeSeries("Health Expenditure per Capita");
-		series2.add(new Year(2018), 10624);
-		series2.add(new Year(2017), 10209);
-		series2.add(new Year(2016), 9877);
-		series2.add(new Year(2015), 9491);
-		series2.add(new Year(2014), 9023);
-		series2.add(new Year(2013), 8599);
-		series2.add(new Year(2012), 8399);
-		series2.add(new Year(2011), 8130);
-		series2.add(new Year(2010), 7930);
-		TimeSeriesCollection dataset2 = new TimeSeriesCollection();
-		dataset2.addSeries(series2);
-
-		TimeSeries series3 = new TimeSeries("Hospital Beds/1000 people");
-		series3.add(new Year(2018), 2.92);
-		series3.add(new Year(2017), 2.87);
-		series3.add(new Year(2016), 2.77);
-		series3.add(new Year(2015), 2.8);
-		series3.add(new Year(2014), 2.83);
-		series3.add(new Year(2013), 2.89);
-		series3.add(new Year(2012), 2.93);
-		series3.add(new Year(2011), 2.97);
-		series3.add(new Year(2010), 3.05);
-
-		TimeSeriesCollection dataset = new TimeSeriesCollection();
-		dataset.addSeries(series1);
-		dataset.addSeries(series3);
-
-		XYPlot plot = new XYPlot();
-		XYSplineRenderer splinerenderer1 = new XYSplineRenderer();
-		XYSplineRenderer splinerenderer2 = new XYSplineRenderer();
-
-		plot.setDataset(0, dataset);
-		plot.setRenderer(0, splinerenderer1);
-		DateAxis domainAxis = new DateAxis("Year");
-		plot.setDomainAxis(domainAxis);
-		plot.setRangeAxis(new NumberAxis(""));
-
-		plot.setDataset(1, dataset2);
-		plot.setRenderer(1, splinerenderer2);
-		plot.setRangeAxis(1, new NumberAxis("US$"));
-
-		plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
-		plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
-
-		JFreeChart chart = new JFreeChart("Mortality vs Expenses & Hospital Beds",
+		chart = new JFreeChart("Values for regions",
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
 		ChartPanel chartPanel = new ChartPanel(chart);
@@ -171,8 +69,36 @@ public class TimeSerie extends Visualization{
 		return chartPanel;
 	}
 	
-//	public void closeFrame() {
-//		frame.dispose();
-//	}
+	public JPanel CreateAddData(ArrayList<DataForRegion> dataRegionList) {
+        DataForRegion data = dataRegionList.get(dataRegionList.size() - 1);
+        TimeSeries series = new TimeSeries("Values for Region " + data.region);
+        int year = 0;
+        int nowYear = 0;
+        for(int i = 0; i < data.values.size(); i++) {
+        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+        	if(year != nowYear) {
+        		nowYear = year;
+        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
+        		series.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+        	}
+        }
+		dataset.addSeries(series);
+		XYSplineRenderer splinerenderer2 = new XYSplineRenderer();
+		plot.setDataset(1, dataset);
+		plot.setRenderer(firstNum, splinerenderer2);
+		plot.mapDatasetToRangeAxis(firstNum, secondNum); // 2nd dataset to 2nd y-axis
+		firstNum++;
+		secondNum++;
+		chart = new JFreeChart("Values for regions",
+				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
+		ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new Dimension(400, 300));
+		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		chartPanel.setBackground(Color.white);
+		
+		return chartPanel;
+
+	}
+	
 }

@@ -37,13 +37,17 @@ public class UserInterface extends JFrame implements ActionListener{
 	JButton addView;
 	JButton removeView;
 	JButton load;
+	JButton configure;
 	JComboBox<String> viewsList;
 	JComboBox<String> geoList;
 	JComboBox<String> fromListYears;
 	JComboBox<String> fromListMonths;
 	JComboBox<String> toListYears;
 	JComboBox<String> toListMonths;
+	JComboBox<String> forecastingMethods;
+	JButton selectMethod;
 	JButton addAdditionalParameters;
+	DataLoading data;
 	int count = 0;
 	
 	JPanel west;
@@ -64,6 +68,8 @@ public class UserInterface extends JFrame implements ActionListener{
 	private UserInterface() throws Exception {
 		// Set window title
 		super("Country Statistics");
+		data = new DataLoading();
+
 		GridLayout gridLayout = new GridLayout(2, 2);
         setLayout(gridLayout);
 		mapToVisualization = new HashMap<String, Visualization>();
@@ -75,7 +81,16 @@ public class UserInterface extends JFrame implements ActionListener{
 		Vector<String> geoNames = d.getCountries();
 
 		geoList = new JComboBox<String>(geoNames);
-
+		
+		Vector<String> forecastingList = new Vector<String>();
+		forecastingList.add("Prediction");
+		forecastingList.add("Forecasting");
+		
+		forecastingMethods = new JComboBox<String>(forecastingList);
+		
+		selectMethod = new JButton("Select Method");
+		selectMethod.addActionListener(this);
+		
 		JLabel from = new JLabel("From");
 		JLabel to = new JLabel("To");
 		Vector<String> years = new Vector<String>();
@@ -114,43 +129,30 @@ public class UserInterface extends JFrame implements ActionListener{
 		JLabel viewsLabel = new JLabel("Available Views: ");
 
 		Vector<String> viewsNames = new Vector<String>();
-		viewsNames.add("Pie Chart");
 		viewsNames.add("Line Chart");
 		viewsNames.add("Bar Chart");
 		viewsNames.add("Scatter Chart");
-		viewsNames.add("Report");
 		viewsNames.add("Time Series");
 		viewsList = new JComboBox<String>(viewsNames);
 		addView = new JButton("+");
 		removeView = new JButton("-");
 		addView.addActionListener(this);
 		removeView.addActionListener(this);
+		configure = new JButton("Configure Visualization");
+		configure.addActionListener(this);
 		initMapping(); //init map
-		
-
-		JLabel methodLabel = new JLabel("        Choose analysis method: ");
-
-		Vector<String> methodsNames = new Vector<String>();
-		methodsNames.add("Mortality");
-		methodsNames.add("Mortality vs Expenses");
-		methodsNames.add("Mortality vs Expenses & Hospital Beds");
-		methodsNames.add("Mortality vs GDP");
-		methodsNames.add("Unemployment vs GDP");
-		methodsNames.add("Unemployment");
-
-		JComboBox<String> methodsList = new JComboBox<String>(methodsNames);
 
 		JPanel south = new JPanel();
 		south.add(viewsLabel);
 		south.add(viewsList);
 		south.add(addView);
 		south.add(removeView);
-
-		south.add(methodLabel);
-		south.add(methodsList);
-		south.add(recalculate);
+		south.add(configure);
+//		
 
 		JPanel east = new JPanel();
+		east.add(forecastingMethods);
+		east.add(selectMethod);
 
 		// Set charts region
 		west = new JPanel();
@@ -163,33 +165,29 @@ public class UserInterface extends JFrame implements ActionListener{
 	}
 	
 	private void initMapping() {
-		piechart = new PieChart();
-		mapToVisualization.put("Pie Chart", piechart);
 		Visualization barchart = new BarChart();
 		mapToVisualization.put("Bar Chart", barchart);
 		Visualization scatterchart = new ScatterChart();
 		mapToVisualization.put("Scatter Chart", scatterchart);
-		Visualization reportchart = new ReportChart();
-		mapToVisualization.put("Report", reportchart);
 		Visualization linechart = new LineChart();
 		mapToVisualization.put("Line Chart", linechart);
 		Visualization timeseries = new TimeSerie();
 		mapToVisualization.put("Time Series", timeseries);
 	}
 	
-
-	
-	private void createAfterDeselect(JPanel west) {
-		ArrayList<Visualization> vis_list = visualization.getVisualization();
-		if(count <=0) {
-			for(int i = 0; i < vis_list.size(); i++) {
-				vis_list.get(i).createNewChart();
-			}
+	public void addToVisualization(Visualization visualization_addition) {
+		if(visualization_addition == null) {
+			
 		}
-		count++;
+		if(visualization.getVisualization().size()==0) {
+			
+		}
+		else {
+			visualization_addition.CreateAddData(visualization.getDataRegion());
+			this.validate();
+		}
 	}
-	
-	
+		
 	private void deselect(JPanel west, String visualization_value, Visualization vis_delete) {
 		JPanel remove_panel = mapToPanel.get(visualization_value);
 		this.remove(remove_panel);
@@ -201,7 +199,7 @@ public class UserInterface extends JFrame implements ActionListener{
 	private void select(JPanel west, String addValue, Visualization addVis) {
 		if(visualization.getVisualization().size() < 2) {
 			visualization.addVisualization(addVis);
-			JPanel holder = addVis.createNewChart();
+			JPanel holder = addVis.createNewChart(visualization.getDataRegion());
 			this.add(holder, BorderLayout.WEST);
 			mapToPanel.put(addValue, holder);
 			this.validate();
@@ -210,6 +208,13 @@ public class UserInterface extends JFrame implements ActionListener{
 	
 	public void actionPerformed(ActionEvent e) {
         if(e.getSource()==addView){
+			data.setVisualization(visualization);
+        	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
+        			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
+        			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
+        	parameter.setDataLoading(data);
+        	parameter.storeData();
+        	parameter.sendToVisualization();
         	String visualization_value = viewsList.getSelectedItem().toString();
         	Visualization visualization_addition = mapToVisualization.get(visualization_value);
         	select(west, visualization_value,visualization_addition);
@@ -225,12 +230,41 @@ public class UserInterface extends JFrame implements ActionListener{
         	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
         			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
         			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
+        	parameter.setDataLoading(data);
+        	parameter.storeData();
+        	parameter.sendToTable();
         }
         if(e.getSource() == addAdditionalParameters) {
+			data.setVisualization(visualization);
         	String additionalParam = viewsList.getSelectedItem().toString();
-        	if(additionalParam == "Time Series") {
-        		
-        	}
+        	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
+        			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
+        			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
+        	parameter.setDataLoading(data);
+        	parameter.storeData();
+        	parameter.sendToVisualization();
+        	String visualization_value = viewsList.getSelectedItem().toString();
+        	Visualization visualization_addition = mapToVisualization.get(visualization_value);
+        	addToVisualization(visualization_addition);
+        }
+        
+        if(e.getSource() == configure) {
+        	String visualization_value = viewsList.getSelectedItem().toString();
+        	Visualization visualization_new = mapToVisualization.get(visualization_value);
+        	deselect(west,visualization_value, visualization_new);
+        	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
+        			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
+        			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
+        	parameter.setDataLoading(data);
+        	parameter.storeData();
+        	parameter.sendToVisualization();
+        	Visualization visualization_addition = mapToVisualization.get(visualization_value);
+        	select(west, visualization_value,visualization_addition);
+        }
+        
+        if(e.getSource() == selectMethod) {
+        	String method = forecastingMethods.getSelectedItem().toString();
+        	InternalWindow window = new InternalWindow(method, geoList, fromListYears, fromListMonths, toListYears,toListMonths, visualization);
         }
     }
 

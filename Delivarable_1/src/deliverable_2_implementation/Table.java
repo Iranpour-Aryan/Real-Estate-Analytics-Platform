@@ -10,7 +10,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -38,7 +37,6 @@ public class Table {
 		colName = new String[] { "Dates", "Values" };
 		products = new Object[dataRegion.values.size()][2];
 		constructData(dataRegion);
-		calStdDev(dataRegion);
 
 		JFrame frame = new JFrame("Simple Table Example");
 		frame.setSize(400, 600);
@@ -46,7 +44,7 @@ public class Table {
 		JTable table = new JTable(products, colName);
 		JScrollPane scrollTable = new JScrollPane(table);
 		
-		JPanel summaryTable = new JPanel(new GridLayout(4, 1));
+		JPanel summaryTable = new JPanel(new GridLayout(3, 1));
 		summaryTable.setPreferredSize(new Dimension(400, 100));
 		Font font = new Font("Serif", Font.PLAIN, 20);
 	
@@ -55,12 +53,6 @@ public class Table {
 	    avg.setVerticalAlignment(JLabel.CENTER);
 		avg.setFont(font);
 		summaryTable.add(avg);
-		
-		JLabel sd = new JLabel("Standard Deviation value: " + String.format("%.2f", stdDev));
-		sd.setHorizontalAlignment(JLabel.CENTER);
-	    sd.setVerticalAlignment(JLabel.CENTER);
-		sd.setFont(font);
-		summaryTable.add(sd);
 		
 		
 		JLabel max = new JLabel("Max value: " + String.format("%.2f", maxVal));
@@ -123,8 +115,8 @@ public class Table {
 				} else {
 					products[i][j] = dataRegion.values.get(i);
 					total += Double.parseDouble(dataRegion.values.get(i));
-					maxVal = Math.max(maxVal, Double.parseDouble(dataRegion.values.get(i)));
-					minVal = Math.min(minVal, Double.parseDouble(dataRegion.values.get(i)));
+					maxVal = Math.max(maxVal, total);
+					minVal = Math.min(minVal, total);
 				}
 			}
 			count++;
@@ -133,13 +125,6 @@ public class Table {
 		minVal = (minVal == Float.MAX_VALUE) ? 0.0 : minVal;
 		maxVal = (maxVal == Float.MIN_VALUE) ? 0.0 : maxVal;
 		
-	}
-	
-	private void calStdDev(DataForRegion dataRegion) {
-		for(int i = 0; i < dataRegion.values.size(); i++) {
-			stdDev += Math.pow(Double.parseDouble(dataRegion.values.get(1)) - avgVal, 2);
-		}
-		stdDev = Math.sqrt(stdDev / dataRegion.values.size());
 	}
 
 	public void addData(DataForRegion d) {
