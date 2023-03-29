@@ -44,6 +44,8 @@ public class UserInterface extends JFrame implements ActionListener{
 	JComboBox<String> fromListMonths;
 	JComboBox<String> toListYears;
 	JComboBox<String> toListMonths;
+	JComboBox<String> forecastingMethods;
+	JButton selectMethod;
 	JButton addAdditionalParameters;
 	DataLoading data;
 	int count = 0;
@@ -79,7 +81,16 @@ public class UserInterface extends JFrame implements ActionListener{
 		Vector<String> geoNames = d.getCountries();
 
 		geoList = new JComboBox<String>(geoNames);
-
+		
+		Vector<String> forecastingList = new Vector<String>();
+		forecastingList.add("Prediction");
+		forecastingList.add("Forecasting");
+		
+		forecastingMethods = new JComboBox<String>(forecastingList);
+		
+		selectMethod = new JButton("Select Method");
+		selectMethod.addActionListener(this);
+		
 		JLabel from = new JLabel("From");
 		JLabel to = new JLabel("To");
 		Vector<String> years = new Vector<String>();
@@ -130,19 +141,6 @@ public class UserInterface extends JFrame implements ActionListener{
 		configure = new JButton("Configure Visualization");
 		configure.addActionListener(this);
 		initMapping(); //init map
-		
-
-		JLabel methodLabel = new JLabel("        Choose analysis method: ");
-
-		Vector<String> methodsNames = new Vector<String>();
-		methodsNames.add("Mortality");
-		methodsNames.add("Mortality vs Expenses");
-		methodsNames.add("Mortality vs Expenses & Hospital Beds");
-		methodsNames.add("Mortality vs GDP");
-		methodsNames.add("Unemployment vs GDP");
-		methodsNames.add("Unemployment");
-
-		JComboBox<String> methodsList = new JComboBox<String>(methodsNames);
 
 		JPanel south = new JPanel();
 		south.add(viewsLabel);
@@ -150,12 +148,11 @@ public class UserInterface extends JFrame implements ActionListener{
 		south.add(addView);
 		south.add(removeView);
 		south.add(configure);
-
-		south.add(methodLabel);
-		south.add(methodsList);
-		south.add(recalculate);
+//		
 
 		JPanel east = new JPanel();
+		east.add(forecastingMethods);
+		east.add(selectMethod);
 
 		// Set charts region
 		west = new JPanel();
@@ -178,19 +175,19 @@ public class UserInterface extends JFrame implements ActionListener{
 		mapToVisualization.put("Time Series", timeseries);
 	}
 	
-
-	
-//	private void createAfterDeselect(JPanel west) {
-//		ArrayList<Visualization> vis_list = visualization.getVisualization();
-//		if(count <=0) {
-//			for(int i = 0; i < vis_list.size(); i++) {
-//				vis_list.get(i).createNewChart();
-//			}
-//		}
-//		count++;
-//	}
-	
-	
+	public void addToVisualization(Visualization visualization_addition) {
+		if(visualization_addition == null) {
+			
+		}
+		if(visualization.getVisualization().size()==0) {
+			
+		}
+		else {
+			visualization_addition.CreateAddData(visualization.getDataRegion());
+			this.validate();
+		}
+	}
+		
 	private void deselect(JPanel west, String visualization_value, Visualization vis_delete) {
 		JPanel remove_panel = mapToPanel.get(visualization_value);
 		this.remove(remove_panel);
@@ -199,7 +196,7 @@ public class UserInterface extends JFrame implements ActionListener{
 		this.repaint();
 	}
 	
-	private void select(JPanel west, String addValue, Visualization addVis, Parameters parameter) {
+	private void select(JPanel west, String addValue, Visualization addVis) {
 		if(visualization.getVisualization().size() < 2) {
 			visualization.addVisualization(addVis);
 			JPanel holder = addVis.createNewChart(visualization.getDataRegion());
@@ -220,7 +217,7 @@ public class UserInterface extends JFrame implements ActionListener{
         	parameter.sendToVisualization();
         	String visualization_value = viewsList.getSelectedItem().toString();
         	Visualization visualization_addition = mapToVisualization.get(visualization_value);
-        	select(west, visualization_value,visualization_addition, parameter);
+        	select(west, visualization_value,visualization_addition);
             System.out.println(viewsList.getSelectedItem().toString());
         }
         if(e.getSource() == removeView) {
@@ -238,6 +235,7 @@ public class UserInterface extends JFrame implements ActionListener{
         	parameter.sendToTable();
         }
         if(e.getSource() == addAdditionalParameters) {
+			data.setVisualization(visualization);
         	String additionalParam = viewsList.getSelectedItem().toString();
         	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
         			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
@@ -247,6 +245,7 @@ public class UserInterface extends JFrame implements ActionListener{
         	parameter.sendToVisualization();
         	String visualization_value = viewsList.getSelectedItem().toString();
         	Visualization visualization_addition = mapToVisualization.get(visualization_value);
+        	addToVisualization(visualization_addition);
         }
         
         if(e.getSource() == configure) {
@@ -260,7 +259,12 @@ public class UserInterface extends JFrame implements ActionListener{
         	parameter.storeData();
         	parameter.sendToVisualization();
         	Visualization visualization_addition = mapToVisualization.get(visualization_value);
-        	select(west, visualization_value,visualization_addition, parameter);
+        	select(west, visualization_value,visualization_addition);
+        }
+        
+        if(e.getSource() == selectMethod) {
+        	String method = forecastingMethods.getSelectedItem().toString();
+        	InternalWindow window = new InternalWindow(method, geoList, fromListYears, fromListMonths, toListYears,toListMonths, visualization);
         }
     }
 

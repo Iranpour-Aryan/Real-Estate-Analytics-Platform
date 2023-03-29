@@ -43,7 +43,7 @@ public class TimeSerie extends Visualization{
 		dataset = new TimeSeriesCollection();
 		dataset.addSeries(series1);
 
-		XYPlot plot = new XYPlot();
+		plot = new XYPlot();
 		XYSplineRenderer splinerenderer1 = new XYSplineRenderer();
 		XYSplineRenderer splinerenderer2 = new XYSplineRenderer();
 
@@ -56,7 +56,7 @@ public class TimeSerie extends Visualization{
 		plot.mapDatasetToRangeAxis(firstNum, secondNum);// 1st dataset to 1st y-axis
 		firstNum++;
 		secondNum++;
-		plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
+//		plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
 
 		chart = new JFreeChart("Values for regions",
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
@@ -71,7 +71,7 @@ public class TimeSerie extends Visualization{
 	
 	public JPanel CreateAddData(ArrayList<DataForRegion> dataRegionList) {
         DataForRegion data = dataRegionList.get(dataRegionList.size() - 1);
-        TimeSeries series2 = new TimeSeries("Values for Region" + data.region);
+        TimeSeries series = new TimeSeries("Values for Region " + data.region);
         int year = 0;
         int nowYear = 0;
         for(int i = 0; i < data.values.size(); i++) {
@@ -79,12 +79,13 @@ public class TimeSerie extends Visualization{
         	if(year != nowYear) {
         		nowYear = year;
         		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
-        		series2.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+        		series.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
         	}
         }
-		dataset.addSeries(series2);
+		dataset.addSeries(series);
 		XYSplineRenderer splinerenderer2 = new XYSplineRenderer();
 		plot.setDataset(1, dataset);
+		plot.setRenderer(firstNum, splinerenderer2);
 		plot.mapDatasetToRangeAxis(firstNum, secondNum); // 2nd dataset to 2nd y-axis
 		firstNum++;
 		secondNum++;

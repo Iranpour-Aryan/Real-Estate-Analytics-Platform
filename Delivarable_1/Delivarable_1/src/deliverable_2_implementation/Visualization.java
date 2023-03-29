@@ -105,6 +105,10 @@ public class Visualization extends JPanel{
 		
 	}
 	
+	public JPanel CreateAddData(ArrayList<DataForRegion> dataRegion) {
+		return new JPanel();
+	}
+	
 	
 	
 }

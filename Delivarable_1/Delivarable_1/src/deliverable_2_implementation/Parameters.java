@@ -22,8 +22,14 @@ public class Parameters {
 		System.out.println("Region: "+ this.region + " From " + 
 							this.startMonth + ":" + this.startYear + " To " 
         					+ this.endMonth +":" + this.endYear);
-		startDate = this.startYear + "-" + this.startMonth + "-1";
-		endDate = this.endYear + "-" + this.endMonth + "-1";
+		startDate = this.startYear + "-";
+		endDate = this.endYear + "-";
+		if(Integer.parseInt(startMonth) < 10) {
+			startDate += "0";
+			endDate += "0";
+		}
+		startDate += this.startMonth + "-01";
+		endDate += this.endMonth + "-01";
 //		try {	
 //			data = new DataLoading();
 //			System.out.println(this.region);

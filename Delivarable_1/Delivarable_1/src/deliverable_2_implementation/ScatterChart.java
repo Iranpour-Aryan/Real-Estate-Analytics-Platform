@@ -17,16 +17,21 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Year;
 
 public class ScatterChart extends Visualization{
+	TimeSeriesCollection dataset;
+	XYPlot plot;
+	JFreeChart chart;
+	int firstNum = 0;
+	int secondNum = 0;
 	
 	public JPanel createNewChart(ArrayList<DataForRegion> dataRegionList) {
-        TimeSeries series1 = new TimeSeries("Values for Region");
-        
         DataForRegion data = dataRegionList.get(dataRegionList.size() - 1);
+        TimeSeries series1 = new TimeSeries("Values for Region " + data.region);
         int year = 0;
         int nowYear = 0;
         for(int i = 0; i < data.values.size(); i++) {
@@ -37,11 +42,11 @@ public class ScatterChart extends Visualization{
         		series1.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
         	}
         }
-		TimeSeriesCollection dataset = new TimeSeriesCollection();
+		dataset = new TimeSeriesCollection();
 		dataset.addSeries(series1);
 
 
-		XYPlot plot = new XYPlot();
+		plot = new XYPlot();
 		XYItemRenderer itemrenderer1 = new XYLineAndShapeRenderer(false, true);
 		XYItemRenderer itemrenderer2 = new XYLineAndShapeRenderer(false, true);
 
@@ -52,12 +57,44 @@ public class ScatterChart extends Visualization{
 		plot.setRangeAxis(new NumberAxis("Values"));
 
 		plot.mapDatasetToRangeAxis(0, 0);// 1st dataset to 1st y-axis
-		plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
+//		plot.mapDatasetToRangeAxis(1, 1); // 2nd dataset to 2nd y-axis
 
-		JFreeChart scatterChart = new JFreeChart("Values for region "+ data.region,
+		chart = new JFreeChart("Values for region",
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
-		ChartPanel chartPanel = new ChartPanel(scatterChart);
+		ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new Dimension(400, 300));
+		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		chartPanel.setBackground(Color.white);
+		
+		return chartPanel;
+
+	}
+	
+	public JPanel CreateAddData(ArrayList<DataForRegion> dataRegionList) {
+        DataForRegion data = dataRegionList.get(dataRegionList.size() - 1);
+        TimeSeries series = new TimeSeries("Values for Region " + data.region);
+        int year = 0;
+        int nowYear = 0;
+        for(int i = 0; i < data.values.size(); i++) {
+        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+        	if(year != nowYear) {
+        		nowYear = year;
+        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
+        		series.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+        	}
+        }
+		dataset.addSeries(series);
+		XYItemRenderer itemrenderer2 = new XYLineAndShapeRenderer(false, true);
+		plot.setDataset(1, dataset);
+//		plot.setRenderer(firstNum, itemrenderer2);
+//		plot.mapDatasetToRangeAxis(firstNum, secondNum); // 2nd dataset to 2nd y-axis
+		firstNum++;
+		secondNum++;
+		chart = new JFreeChart("Values for regions",
+				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
+
+		ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new Dimension(400, 300));
 		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 		chartPanel.setBackground(Color.white);
