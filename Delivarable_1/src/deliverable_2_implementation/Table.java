@@ -44,7 +44,7 @@ public class Table {
 		JTable table = new JTable(products, colName);
 		JScrollPane scrollTable = new JScrollPane(table);
 		
-		JPanel summaryTable = new JPanel(new GridLayout(3, 1));
+		JPanel summaryTable = new JPanel(new GridLayout(4, 1));
 		summaryTable.setPreferredSize(new Dimension(400, 100));
 		Font font = new Font("Serif", Font.PLAIN, 20);
 	
@@ -53,6 +53,12 @@ public class Table {
 	    avg.setVerticalAlignment(JLabel.CENTER);
 		avg.setFont(font);
 		summaryTable.add(avg);
+		
+		JLabel std = new JLabel("Standard Deviation value: " + String.format("%.2f", stdDev));
+		std.setHorizontalAlignment(JLabel.CENTER);
+	    std.setVerticalAlignment(JLabel.CENTER);
+		std.setFont(font);
+		summaryTable.add(std);
 		
 		
 		JLabel max = new JLabel("Max value: " + String.format("%.2f", maxVal));
@@ -124,7 +130,14 @@ public class Table {
 		avgVal = (count != 0) ? total / count : 0.0;
 		minVal = (minVal == Float.MAX_VALUE) ? 0.0 : minVal;
 		maxVal = (maxVal == Float.MIN_VALUE) ? 0.0 : maxVal;
-		
+		calStdDev(dataRegion);
+	}
+	
+	private void calStdDev(DataForRegion d) {
+		for(int i = 0; i < d.values.size(); i++) {
+			stdDev += Math.pow(Double.parseDouble(d.values.get(1)) - avgVal, 2);
+		}
+		stdDev = Math.sqrt(stdDev / d.values.size()); 
 	}
 
 	public void addData(DataForRegion d) {

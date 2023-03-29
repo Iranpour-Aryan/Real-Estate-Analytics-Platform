@@ -270,7 +270,7 @@ public class UserInterface extends JFrame implements ActionListener{
 
 	public static void main(String[] args) throws Exception {
 		frame = UserInterface.getInstance();
-		frame.setSize(900, 600);
+		frame.setPreferredSize(new Dimension(900, 300));
 		frame.pack();
 		frame.setVisible(true);
 	}
