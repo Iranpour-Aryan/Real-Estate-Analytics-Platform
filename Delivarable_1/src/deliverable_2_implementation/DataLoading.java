@@ -14,7 +14,7 @@ public class DataLoading {
     private Statement statement = null;
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
-    private ArrayList<Parameters> datas = new ArrayList<>();
+    private ArrayList<DataForRegion> datas = new ArrayList<>();
     Table table;
     Visualization visualization;
     DataForRegion dataForRegion;
@@ -68,11 +68,11 @@ public class DataLoading {
         return countries;
     }
     
-    public void putData(Parameters param) {
-    	datas.add(param);
+    public void putData() {
+    	datas.add(dataForRegion);
     }
     
-    public ArrayList<Parameters> getData() {
+    public ArrayList<DataForRegion> getData() {
     	return datas;
     }
 
