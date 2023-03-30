@@ -38,6 +38,7 @@ public class UserInterface extends JFrame implements ActionListener{
 	JButton removeView;
 	JButton load;
 	JButton configure;
+	JButton compare;
 	JComboBox<String> viewsList;
 	JComboBox<String> geoList;
 	JComboBox<String> fromListYears;
@@ -122,6 +123,10 @@ public class UserInterface extends JFrame implements ActionListener{
 		north.add(toListYears);
 		north.add(load);
 		north.add(addAdditionalParameters);
+		
+		compare = new JButton("Compare");
+		updateButtonState();
+		north.add(compare);
 
 		// Set bottom bar
 		JButton recalculate = new JButton("Recalculate");
@@ -157,11 +162,15 @@ public class UserInterface extends JFrame implements ActionListener{
 		// Set charts region
 		west = new JPanel();
 		west.setLayout(new GridLayout(2, 0));
-
+		
 		getContentPane().add(north, BorderLayout.NORTH);
 		getContentPane().add(east, BorderLayout.EAST);
 		getContentPane().add(south, BorderLayout.SOUTH);
 		getContentPane().add(west, BorderLayout.WEST);
+	}
+	
+	private void updateButtonState() {
+		compare.setEnabled(data.getData().size() > 1);
 	}
 	
 	private void initMapping() {
@@ -233,6 +242,7 @@ public class UserInterface extends JFrame implements ActionListener{
         	parameter.setDataLoading(data);
         	parameter.storeData();
         	parameter.sendToTable();
+        	updateButtonState();
         }
         if(e.getSource() == addAdditionalParameters) {
 			data.setVisualization(visualization);
@@ -266,6 +276,11 @@ public class UserInterface extends JFrame implements ActionListener{
         	String method = forecastingMethods.getSelectedItem().toString();
         	InternalWindow window = new InternalWindow(method, geoList, fromListYears, fromListMonths, toListYears,toListMonths, visualization);
         }
+        
+        if(e.getSource() == compare) {
+        	
+        }
+        
     }
 
 	public static void main(String[] args) throws Exception {

@@ -44,6 +44,7 @@ public class Parameters {
 	public void storeData() {
 		try {	
 //			data = new DataLoading();
+			data.putData(this);
 			System.out.println(this.region);
 			data.getValues(this.region, this.startDate, this.endDate);
 		} catch (Exception e) {
@@ -63,6 +64,8 @@ public class Parameters {
 	public void setDataLoading(DataLoading dataLoading) {
 		data = dataLoading;
 	}
+	
+	
 
 
 }

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 
@@ -13,6 +14,7 @@ public class DataLoading {
     private Statement statement = null;
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
+    private ArrayList<Parameters> datas = new ArrayList<>();
     Table table;
     Visualization visualization;
     DataForRegion dataForRegion;
@@ -64,6 +66,14 @@ public class DataLoading {
             countries.add(rst.getString(1));
         }
         return countries;
+    }
+    
+    public void putData(Parameters param) {
+    	datas.add(param);
+    }
+    
+    public ArrayList<Parameters> getData() {
+    	return datas;
     }
 
 	public Vector<String> getValues(String region, String startDate, String endDate) throws SQLException {
