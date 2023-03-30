@@ -28,9 +28,17 @@ public class Table {
 	double minVal = 0.0, maxVal = 0.0;
 	double stdDev = 0.0;
 	
+	private JFrame frame;
+	
 
 	public Table() {
+		frame = new JFrame("Simple Table Example");
+		frame.setSize(400, 600);
 		data = new ArrayList<DataForRegion>();
+	}
+	
+	public void displayTable() {
+		
 	}
 
 	public void CreateTable(DataForRegion dataRegion) {
@@ -111,26 +119,28 @@ public class Table {
 
 	private void constructData(DataForRegion dataRegion) {
 		int count = 0;
-		double total = 0.0;
-		minVal = Float.MAX_VALUE; 
-		maxVal = Float.MIN_VALUE;
-		for (int i = 0; i < dataRegion.values.size(); i++) {
-			for (int j = 0; j < 2; j++) {
-				if (j == 0) {
-					products[i][j] = dataRegion.dates.get(i);
-				} else {
-					products[i][j] = dataRegion.values.get(i);
-					total += Double.parseDouble(dataRegion.values.get(i));
-					maxVal = Math.max(maxVal, total);
-					minVal = Math.min(minVal, total);
-				}
-			}
-			count++;
-		}
-		avgVal = (count != 0) ? total / count : 0.0;
-		minVal = (minVal == Float.MAX_VALUE) ? 0.0 : minVal;
-		maxVal = (maxVal == Float.MIN_VALUE) ? 0.0 : maxVal;
-		calStdDev(dataRegion);
+        double numAtIndex = 0.0;
+        double total = 0.0;
+        minVal = Float.MAX_VALUE; 
+        maxVal = Float.MIN_VALUE;
+        for (int i = 0; i < dataRegion.values.size(); i++) {
+            for (int j = 0; j < 2; j++) {
+                if (j == 0) {
+                    products[i][j] = dataRegion.dates.get(i);
+                } else {
+                    products[i][j] = dataRegion.values.get(i);
+                    total += Double.parseDouble(dataRegion.values.get(i));
+                    numAtIndex = Double.parseDouble(dataRegion.values.get(i));
+                    maxVal = Math.max(maxVal, numAtIndex);
+                    minVal = Math.min(minVal, numAtIndex);
+                }
+            }
+            count++;
+        }
+        avgVal = (count != 0) ? total / count : 0.0;
+        minVal = (minVal == Float.MAX_VALUE) ? 0.0 : minVal;
+        maxVal = (maxVal == Float.MIN_VALUE) ? 0.0 : maxVal;
+        calStdDev(dataRegion);
 	}
 	
 	private void calStdDev(DataForRegion d) {
@@ -139,10 +149,21 @@ public class Table {
 		}
 		stdDev = Math.sqrt(stdDev / d.values.size()); 
 	}
-
-	public void addData(DataForRegion d) {
-		this.data.add(d);
-		this.CreateTable(d);
+	
+	public void display(DataLoading d) {
+		for(int i = 0; i < d.getData().size(); i++) {
+			data.add(d.getData().get(i));
+		}
+		
+		for(int i = 0; i < data.size(); i++) {
+			CreateTable(data.get(i));
+		}
 	}
+
+//	public void addData(DataForRegion d) {
+//		this.data.add(d);
+//		this.CreateTable(d);
+//		System.out.println(data.size());
+//	}
 
 }

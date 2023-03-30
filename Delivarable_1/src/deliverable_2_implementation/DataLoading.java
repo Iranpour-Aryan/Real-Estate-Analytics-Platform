@@ -134,7 +134,7 @@ public class DataLoading {
     }
     
     public void addToTable() {
-    	table.addData(dataForRegion);
+    	table.display(this);
     }
     
     public void setVisualization(Visualization setVis) {
