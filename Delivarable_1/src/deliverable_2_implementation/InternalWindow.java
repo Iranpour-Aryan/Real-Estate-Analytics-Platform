@@ -13,21 +13,25 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class InternalWindow extends JFrame implements ActionListener{
+	UserInterface userInterface;
 	JFrame frame;
 	String method;
 	JButton button;
+	JButton monthly;
 	JPanel panel;
 	JTextField inputBox;
 	JLabel label;
 	Visualization visualization;
 	DataForRegion data;
+	WekaTimeSeriesPrediction wekaPrediction;
 	private JComboBox<String> geoList;
 	private JComboBox<String> fromListMonths;
 	private JComboBox<String> fromListYears;
 	private JComboBox<String> toListMonths;
 	private JComboBox<String> toListYears;
 	
-	public InternalWindow(String method, JComboBox<String> geoList, JComboBox<String> fromListYears, JComboBox<String> fromListMonths, JComboBox<String> toListYears, JComboBox<String> toListMonths, Visualization visualization) {
+	public InternalWindow(String method, JComboBox<String> geoList, JComboBox<String> fromListYears, JComboBox<String> fromListMonths, JComboBox<String> toListYears, 
+			JComboBox<String> toListMonths, Visualization visualization, 	UserInterface userInterface) {
 		this.method = method;
 		this.geoList = geoList;
 		this.fromListMonths = fromListMonths;
@@ -35,12 +39,15 @@ public class InternalWindow extends JFrame implements ActionListener{
 		this.toListMonths = toListMonths;
 		this.toListYears = toListYears;
 		this.visualization = visualization;
+		this.userInterface = userInterface;
 		frame = new JFrame();
     	frame.setSize(900, 600);
     	label = new JLabel("Enter number of months:");
         inputBox = new JTextField(20); // create a text field with 20 columns
         button = new JButton("Done");
         button.addActionListener(this);
+        monthly = new JButton("Monthly");
+        monthly.addActionListener(this);
         panel = new JPanel();
         panel.add(label);
         panel.add(inputBox);
@@ -74,16 +81,23 @@ public class InternalWindow extends JFrame implements ActionListener{
 		 
 	}
 	
-	public void getDates(){
+	public Vector<String> getDates(){
 		for(int i = 0; i < data.dates.size(); i++) {
 			System.out.println(data.dates.get(i));
 		}
+		return data.dates;
 	}
 	
-	public void getValues(){
+	public Vector<String> getValues(){
 		for(int i = 0; i < data.dates.size(); i++) {
 			System.out.println(data.values.get(i));
 		}
+		return data.values;
+	}
+	
+	public int getNumMonths(String months) {
+		System.out.println(months);
+		return Integer.parseInt(months);
 	}
 
 	@Override
@@ -93,8 +107,12 @@ public class InternalWindow extends JFrame implements ActionListener{
         			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
         			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
 			getTimeSeriesValues(parameter);
-			getDates();
-			getValues();
+			try {
+				wekaPrediction = new WekaTimeSeriesPrediction(getValues(),getDates(), getNumMonths(inputBox.getText()));
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		
 	}

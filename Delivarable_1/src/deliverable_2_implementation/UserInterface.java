@@ -14,6 +14,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -38,7 +39,6 @@ public class UserInterface extends JFrame implements ActionListener{
 	JButton removeView;
 	JButton load;
 	JButton configure;
-	JButton compare;
 	JComboBox<String> viewsList;
 	JComboBox<String> geoList;
 	JComboBox<String> fromListYears;
@@ -123,10 +123,6 @@ public class UserInterface extends JFrame implements ActionListener{
 		north.add(toListYears);
 		north.add(load);
 		north.add(addAdditionalParameters);
-		
-		compare = new JButton("Compare");
-		updateButtonState();
-		north.add(compare);
 
 		// Set bottom bar
 		JButton recalculate = new JButton("Recalculate");
@@ -152,7 +148,7 @@ public class UserInterface extends JFrame implements ActionListener{
 		south.add(viewsList);
 		south.add(addView);
 		south.add(removeView);
-		south.add(configure);
+//		south.add(configure);
 //		
 
 		JPanel east = new JPanel();
@@ -162,15 +158,12 @@ public class UserInterface extends JFrame implements ActionListener{
 		// Set charts region
 		west = new JPanel();
 		west.setLayout(new GridLayout(2, 0));
-		
+		west.add(configure);
+
 		getContentPane().add(north, BorderLayout.NORTH);
 		getContentPane().add(east, BorderLayout.EAST);
 		getContentPane().add(south, BorderLayout.SOUTH);
 		getContentPane().add(west, BorderLayout.WEST);
-	}
-	
-	private void updateButtonState() {
-		compare.setEnabled(data.getData().size() > 1);
 	}
 	
 	private void initMapping() {
@@ -197,15 +190,26 @@ public class UserInterface extends JFrame implements ActionListener{
 		}
 	}
 		
-	private void deselect(JPanel west, String visualization_value, Visualization vis_delete) {
+	public void deselect(String visualization_value, Visualization vis_delete) {
 		JPanel remove_panel = mapToPanel.get(visualization_value);
+		System.out.println(remove_panel);
 		this.remove(remove_panel);
 		visualization.removeVisualization(vis_delete);
+		data.getData().removeAll(data.getData());
+		visualization.getDataRegion().removeAll(visualization.getDataRegion());
 		this.revalidate();
 		this.repaint();
 	}
 	
-	private void select(JPanel west, String addValue, Visualization addVis) {
+	public void removeConfiguredVisualization(Visualization visualization_type, String visualization_value) {
+		JPanel remove_panel = mapToPanel.get(visualization_value);
+		this.remove(remove_panel);
+		visualization.removeVisualization(visualization_type);
+		this.revalidate();
+		this.repaint();
+	}
+	
+	public void select(String addValue, Visualization addVis) {
 		if(visualization.getVisualization().size() < 2) {
 			visualization.addVisualization(addVis);
 			JPanel holder = addVis.createNewChart(visualization.getDataRegion());
@@ -226,13 +230,13 @@ public class UserInterface extends JFrame implements ActionListener{
         	parameter.sendToVisualization();
         	String visualization_value = viewsList.getSelectedItem().toString();
         	Visualization visualization_addition = mapToVisualization.get(visualization_value);
-        	select(west, visualization_value,visualization_addition);
+        	select(visualization_value,visualization_addition);
             System.out.println(viewsList.getSelectedItem().toString());
         }
         if(e.getSource() == removeView) {
         	String visualization_value = viewsList.getSelectedItem().toString();
         	Visualization visualization_deletion = mapToVisualization.get(visualization_value);
-        	deselect(west,visualization_value, visualization_deletion);
+        	deselect(visualization_value, visualization_deletion);
         	System.out.println(viewsList.getSelectedItem().toString());
         }
         if(e.getSource() == load) {
@@ -242,7 +246,6 @@ public class UserInterface extends JFrame implements ActionListener{
         	parameter.setDataLoading(data);
         	parameter.storeData();
         	parameter.sendToTable();
-        	updateButtonState();
         }
         if(e.getSource() == addAdditionalParameters) {
 			data.setVisualization(visualization);
@@ -260,36 +263,33 @@ public class UserInterface extends JFrame implements ActionListener{
         
         if(e.getSource() == configure) {
         	String visualization_value = viewsList.getSelectedItem().toString();
-        	Visualization visualization_new = mapToVisualization.get(visualization_value);
-        	deselect(west,visualization_value, visualization_new);
-        	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
-        			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
-        			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
-        	parameter.setDataLoading(data);
-        	parameter.storeData();
-        	parameter.sendToVisualization();
         	Visualization visualization_addition = mapToVisualization.get(visualization_value);
-        	select(west, visualization_value,visualization_addition);
+        	ConfigureWindow configureWindow = new ConfigureWindow(this.visualization,visualization_addition,visualization_value, this);
         }
         
         if(e.getSource() == selectMethod) {
         	String method = forecastingMethods.getSelectedItem().toString();
-        	InternalWindow window = new InternalWindow(method, geoList, fromListYears, fromListMonths, toListYears,toListMonths, visualization);
+        	InternalWindow window = new InternalWindow(method, geoList, fromListYears, fromListMonths, toListYears,toListMonths, visualization, this);
         }
-        
-        if(e.getSource() == compare) {
-        	
-        }
-        
     }
 
 	public static void main(String[] args) throws Exception {
 		frame = UserInterface.getInstance();
-		frame.setPreferredSize(new Dimension(900, 300));
+		frame.setSize(900, 600);
 		frame.pack();
 		frame.setVisible(true);
 	}
 	// TODO Auto-generated method stub
+
+	public void createConfiguredChart(Color color, Shape shape, int width, int length, Visualization visualization_type, String viz_value) {
+		this.visualization.addVisualization(visualization_type);
+		mapToVisualization.put(viz_value, visualization_type);
+		System.out.println(visualization_type);
+		JPanel holder = visualization_type.CreateConfiguredChart(color, shape, width, length, this.visualization.dataRegionList);
+		this.add(holder, BorderLayout.WEST);
+		mapToPanel.put(viz_value, holder);
+		this.validate();
+	}
 
 }
 
