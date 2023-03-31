@@ -151,6 +151,23 @@ public class LineChart extends Visualization{
 			XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 			renderer.setSeriesPaint(0, color);
 			renderer.setSeriesShape(0,  shape);
+<<<<<<< HEAD
+=======
+
+			plot.setDataset(0, dataset1);
+			plot.setRenderer(0, renderer);
+		}
+		chart = new JFreeChart("Values for regions",
+				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
+
+		ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new Dimension(width, length));
+		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		chartPanel.setBackground(Color.white);
+		
+		return chartPanel;
+	}
+>>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 
 			plot.setDataset(0, dataset1);
 			plot.setRenderer(0, renderer);

@@ -29,20 +29,12 @@ public class Parameters {
 		}
 		startDate += this.startMonth + "-01";
 		endDate += this.endMonth + "-01";
-//		try {	
-//			data = new DataLoading();
-//			System.out.println(this.region);
-//			data.getValues(this.region, this.startDate, this.endDate);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
 
 	}
 
 	public void storeData() {
 		try {
-//			data = new DataLoading();
 			boolean check = false;
 			for (DataForRegion d : data.getData()) {
 				if (d.getRegion().equals(region) && d.getDates().get(0).equals(startDate)

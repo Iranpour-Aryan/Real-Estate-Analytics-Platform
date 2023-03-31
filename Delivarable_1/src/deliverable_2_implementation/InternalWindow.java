@@ -37,11 +37,14 @@ public class InternalWindow extends JFrame implements ActionListener{
 	private JComboBox<String> toListMonths;
 	private JComboBox<String> toListYears;
 	
+<<<<<<< HEAD
 	JButton button2;
 	private JComboBox<DataForRegion> firstSelection;
 	private JComboBox<DataForRegion> secondSelection;
 	private JLabel result;
 	
+=======
+>>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 	public InternalWindow(String method, JComboBox<String> geoList, JComboBox<String> fromListYears, JComboBox<String> fromListMonths, JComboBox<String> toListYears, 
 			JComboBox<String> toListMonths, Visualization visualization, 	UserInterface userInterface) {
 		this.method = method;
@@ -127,18 +130,29 @@ public class InternalWindow extends JFrame implements ActionListener{
 		 }
 	}
 	
+<<<<<<< HEAD
 	
 	
 	public void getDates(){
+=======
+	public Vector<String> getDates(){
+>>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 		for(int i = 0; i < data.dates.size(); i++) {
 			System.out.println(data.dates.get(i));
 		}
+		return data.dates;
 	}
 	
-	public void getValues(){
+	public Vector<String> getValues(){
 		for(int i = 0; i < data.dates.size(); i++) {
 			System.out.println(data.values.get(i));
 		}
+		return data.values;
+	}
+	
+	public int getNumMonths(String months) {
+		System.out.println(months);
+		return Integer.parseInt(months);
 	}
 
 	@Override
@@ -148,8 +162,12 @@ public class InternalWindow extends JFrame implements ActionListener{
         			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
         			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
 			getTimeSeriesValues(parameter);
-			getDates();
-			getValues();
+			try {
+				wekaPrediction = new WekaTimeSeriesPrediction(getValues(),getDates(), getNumMonths(inputBox.getText()));
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		if(e.getSource() == button2) {
 			DataForRegion d1 = (DataForRegion) firstSelection.getSelectedItem();
