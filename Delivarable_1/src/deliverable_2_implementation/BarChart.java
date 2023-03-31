@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Shape;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -98,6 +99,37 @@ public class BarChart extends Visualization{
 		
 		return chartPanel;
 
+	}
+	
+	public JPanel CreateConfiguredChart(Color color, Shape shape, int width, int length,  ArrayList<DataForRegion> dataRegionList) {
+        int year = 0;
+        int nowYear = 0;
+        for(int a = 0; a < dataRegionList.size(); a++) {
+    		DataForRegion data = dataRegionList.get(a);
+        	for(int i = 0; i < data.values.size(); i++) {
+            	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+            	if(year != nowYear) {
+            		nowYear = year;
+            		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
+            		dataset.setValue(avg, "Values for " + data.region, data.dates.get(i).substring(0, 4));
+            	}
+            }
+        	BarRenderer barrenderer1 = new BarRenderer();
+        	barrenderer1.setSeriesPaint(0, color);
+//    		plot.setRenderer(1, barrenderer1);
+//        	barrenderer1.setSeriesShape(0,  shape);
+    		plot.setDataset(1, dataset);
+        }
+        
+		chart = new JFreeChart("Values for regions",
+				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
+
+		ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new Dimension(width, length));
+		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		chartPanel.setBackground(Color.white);
+		
+		return chartPanel;
 	}
 
 }

@@ -45,8 +45,8 @@ public class Parameters {
 //			data = new DataLoading();
 			boolean check = false;
 			for (DataForRegion d : data.getData()) {
-				if (d.region.equals(region) && d.dates.get(0).equals(startDate)
-						&& d.dates.get(d.dates.size() - 1).equals(endDate)) {
+				if (d.getRegion().equals(region) && d.getDates().get(0).equals(startDate)
+						&& d.getDates().get(d.getDates().size() - 1).equals(endDate)) {
 					check = true;
 					break;
 				}

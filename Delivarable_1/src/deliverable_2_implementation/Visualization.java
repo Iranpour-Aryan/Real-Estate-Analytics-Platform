@@ -2,7 +2,9 @@ package deliverable_2_implementation;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Shape;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -36,10 +38,16 @@ public class Visualization extends JPanel{
 	protected ArrayList<Visualization> visualization;
 	protected int index;
 	protected ArrayList<DataForRegion> dataRegionList;	
+	protected HashMap<String, Shape> shapes;
+	protected HashMap<String, Color> colours;
+	protected HashMap<Integer, Integer> size;
 	
 	public Visualization() {
 		this.visualization = new ArrayList<Visualization>();
 		this.dataRegionList = new ArrayList<DataForRegion>();
+		shapes = new HashMap<String, Shape>();
+		colours = new HashMap<String, Color>();
+		size = new HashMap<Integer, Integer>();
 //		this.visualizationOptions = new ArrayList<>
 //		visualizationOptions.add("Barchart");
 //		visualizationOptions.add("LineChart");
@@ -54,7 +62,6 @@ public class Visualization extends JPanel{
 	}
 	
 	public void addVisualization(Visualization v) {
-
 		visualization.add(v);
 	}
 	
@@ -106,6 +113,10 @@ public class Visualization extends JPanel{
 	}
 	
 	public JPanel CreateAddData(ArrayList<DataForRegion> dataRegion) {
+		return new JPanel();
+	}
+	
+	public JPanel CreateConfiguredChart(Color c, Shape shape, int width, int length, ArrayList<DataForRegion> dataRegionList2) {
 		return new JPanel();
 	}
 	
