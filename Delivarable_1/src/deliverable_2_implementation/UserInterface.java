@@ -39,6 +39,7 @@ public class UserInterface extends JFrame implements ActionListener {
 	JButton removeView;
 	JButton load;
 	JButton configure;
+	JButton compare;
 	JComboBox<String> viewsList;
 	JComboBox<String> geoList;
 	JComboBox<String> fromListYears;
@@ -123,15 +124,11 @@ public class UserInterface extends JFrame implements ActionListener {
 		north.add(toListYears);
 		north.add(load);
 		north.add(addAdditionalParameters);
-<<<<<<< HEAD
 
 		compare = new JButton("Compare");
 		compare.addActionListener(this);
 		updateButtonState();
 		north.add(compare);
-=======
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
-
 		// Set bottom bar
 		JButton recalculate = new JButton("Recalculate");
 
@@ -166,25 +163,18 @@ public class UserInterface extends JFrame implements ActionListener {
 		// Set charts region
 		west = new JPanel();
 		west.setLayout(new GridLayout(2, 0));
-<<<<<<< HEAD
-=======
+
 		west.add(configure);
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 
 		getContentPane().add(north, BorderLayout.NORTH);
 		getContentPane().add(east, BorderLayout.EAST);
 		getContentPane().add(south, BorderLayout.SOUTH);
 		getContentPane().add(west, BorderLayout.WEST);
 	}
-<<<<<<< HEAD
-
 	private void updateButtonState() {
 		compare.setEnabled(data.getData().size() > 1);
 	}
 
-=======
-	
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 	private void initMapping() {
 		Visualization barchart = new BarChart();
 		mapToVisualization.put("Bar Chart", barchart);
@@ -208,11 +198,6 @@ public class UserInterface extends JFrame implements ActionListener {
 			this.validate();
 		}
 	}
-<<<<<<< HEAD
-
-=======
-		
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 	public void deselect(String visualization_value, Visualization vis_delete) {
 		JPanel remove_panel = mapToPanel.get(visualization_value);
 		System.out.println(remove_panel);
@@ -223,11 +208,6 @@ public class UserInterface extends JFrame implements ActionListener {
 		this.revalidate();
 		this.repaint();
 	}
-<<<<<<< HEAD
-
-=======
-	
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 	public void removeConfiguredVisualization(Visualization visualization_type, String visualization_value) {
 		JPanel remove_panel = mapToPanel.get(visualization_value);
 		this.remove(remove_panel);
@@ -235,15 +215,9 @@ public class UserInterface extends JFrame implements ActionListener {
 		this.revalidate();
 		this.repaint();
 	}
-<<<<<<< HEAD
-
-	public void select(String addValue, Visualization addVis) {
-		if (visualization.getVisualization().size() < 2) {
-=======
 	
 	public void select(String addValue, Visualization addVis) {
 		if(visualization.getVisualization().size() < 2) {
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 			visualization.addVisualization(addVis);
 			JPanel holder = addVis.createNewChart(visualization.getDataRegion());
 			this.add(holder, BorderLayout.WEST);
@@ -272,7 +246,6 @@ public class UserInterface extends JFrame implements ActionListener {
         	deselect(visualization_value, visualization_deletion);
         	System.out.println(viewsList.getSelectedItem().toString());
         }
-<<<<<<< HEAD
 		if (e.getSource() == load) {
 			Parameters parameter = new Parameters(geoList.getSelectedItem().toString(),
 					fromListMonths.getSelectedItem().toString(), fromListYears.getSelectedItem().toString(),
@@ -283,8 +256,6 @@ public class UserInterface extends JFrame implements ActionListener {
 			updateButtonState();
 		}
 		if(e.getSource() == addAdditionalParameters) {
-=======
-        if(e.getSource() == load) {
         	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
         			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
         			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
@@ -293,7 +264,6 @@ public class UserInterface extends JFrame implements ActionListener {
         	parameter.sendToTable();
         }
         if(e.getSource() == addAdditionalParameters) {
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 			data.setVisualization(visualization);
         	String additionalParam = viewsList.getSelectedItem().toString();
         	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
@@ -310,7 +280,6 @@ public class UserInterface extends JFrame implements ActionListener {
         if(e.getSource() == configure) {
         	String visualization_value = viewsList.getSelectedItem().toString();
         	Visualization visualization_addition = mapToVisualization.get(visualization_value);
-<<<<<<< HEAD
         	new ConfigureWindow(this.visualization,visualization_addition,visualization_value, this);
         }
 
@@ -322,30 +291,12 @@ public class UserInterface extends JFrame implements ActionListener {
 		if (e.getSource() == compare) {
 			new InternalWindow(data);
 		}
-
-	}
-
-	public void createConfiguredChart(Color color, Shape shape, int width, int length, Visualization visualization_type,
-			String viz_value) {
-		this.visualization.addVisualization(visualization_type);
-		mapToVisualization.put(viz_value, visualization_type);
-		System.out.println(visualization_type);
-		JPanel holder = visualization_type.CreateConfiguredChart(color, shape, width, length,
-				this.visualization.dataRegionList);
-		this.add(holder, BorderLayout.WEST);
-		mapToPanel.put(viz_value, holder);
-		this.validate();
-	}
-=======
-        	ConfigureWindow configureWindow = new ConfigureWindow(this.visualization,visualization_addition,visualization_value, this);
-        }
         
         if(e.getSource() == selectMethod) {
         	String method = forecastingMethods.getSelectedItem().toString();
         	InternalWindow window = new InternalWindow(method, geoList, fromListYears, fromListMonths, toListYears,toListMonths, visualization, this);
         }
     }
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 
 	public static void main(String[] args) throws Exception {
 		frame = UserInterface.getInstance();

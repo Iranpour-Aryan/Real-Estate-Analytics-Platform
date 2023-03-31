@@ -123,17 +123,7 @@ public class BarChart extends Visualization{
         
 		chart = new JFreeChart("Values for regions",
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
-<<<<<<< HEAD
-=======
 
-		ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new Dimension(width, length));
-		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-		chartPanel.setBackground(Color.white);
-		
-		return chartPanel;
-	}
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 
 		ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new Dimension(width, length));

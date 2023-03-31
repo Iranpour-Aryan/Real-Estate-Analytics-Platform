@@ -132,9 +132,7 @@ public class TimeSerie extends Visualization{
 		
 		return chartPanel;
 	}
-<<<<<<< HEAD
-=======
-	
+
 	public JPanel CreateConfiguredChart(Color color, Shape shape, int width, int length, ArrayList<DataForRegion> dataRegionList) {
 		int year = 0;
 		int nowYear = 0;
@@ -168,40 +166,6 @@ public class TimeSerie extends Visualization{
 		
 		return chartPanel;
 	}
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 	
-	public JPanel CreateConfiguredChart(Color color, Shape shape, int width, int length, ArrayList<DataForRegion> dataRegionList) {
-		int year = 0;
-		int nowYear = 0;
-		TimeSeriesCollection dataset1 = new TimeSeriesCollection();
-		for(int a = 0; a < dataRegionList.size(); a++) {
-			DataForRegion data = dataRegionList.get(a);
-			TimeSeries series = new TimeSeries("Values for Region " + data.region);
-			for(int i = 0; i < data.values.size(); i++) {
-	        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
-	        	if(year != nowYear) {
-	        		nowYear = year;
-	        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
-	        		series.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
-	        	}
-	        }
-			dataset1.addSeries(series);
-			XYSplineRenderer splinerenderer2 = new XYSplineRenderer();
-			splinerenderer2.setSeriesPaint(0, color);
-			splinerenderer2.setSeriesShape(0,  shape);
-
-			plot.setDataset(0, dataset1);
-			plot.setRenderer(0, splinerenderer2);
-		}
-		chart = new JFreeChart("Values for regions",
-				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
-
-		ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new Dimension(width, length));
-		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-		chartPanel.setBackground(Color.white);
-		
-		return chartPanel;
-	}
 	
 }

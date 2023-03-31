@@ -37,14 +37,12 @@ public class InternalWindow extends JFrame implements ActionListener{
 	private JComboBox<String> toListMonths;
 	private JComboBox<String> toListYears;
 	
-<<<<<<< HEAD
 	JButton button2;
 	private JComboBox<DataForRegion> firstSelection;
 	private JComboBox<DataForRegion> secondSelection;
 	private JLabel result;
 	
-=======
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
+
 	public InternalWindow(String method, JComboBox<String> geoList, JComboBox<String> fromListYears, JComboBox<String> fromListMonths, JComboBox<String> toListYears, 
 			JComboBox<String> toListMonths, Visualization visualization, 	UserInterface userInterface) {
 		this.method = method;
@@ -130,13 +128,11 @@ public class InternalWindow extends JFrame implements ActionListener{
 		 }
 	}
 	
-<<<<<<< HEAD
+
 	
 	
-	public void getDates(){
-=======
+
 	public Vector<String> getDates(){
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
 		for(int i = 0; i < data.dates.size(); i++) {
 			System.out.println(data.dates.get(i));
 		}

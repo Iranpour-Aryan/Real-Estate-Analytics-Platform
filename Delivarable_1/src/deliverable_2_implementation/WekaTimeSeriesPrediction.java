@@ -80,8 +80,5 @@ public class WekaTimeSeriesPrediction {
 	    double prediction = lin.classifyInstance(newInstance);
 	    System.out.println("Predicted value: " + prediction);
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8682079deb1b16332627aaab18323cc466b15d22
+
