@@ -33,6 +33,11 @@ public class ConfigureWindow implements ActionListener {
 	JTextField widthField;
 	JButton button;
 	String viz_value;
+	Vector<String> timeList;
+	private JComboBox<String> configTimeList;
+	private JLabel timeLabel;
+	private JLabel colourLabel;
+	private JLabel shapeLabel;
 
 	
 	public ConfigureWindow(Visualization visualization, Visualization visualization_type, String visualization_value, UserInterface userInterface) {
@@ -44,20 +49,30 @@ public class ConfigureWindow implements ActionListener {
     	frame.setSize(900, 600);
 		coloursList = new Vector<String>();
 		addColours();
+		colourLabel = new JLabel("Enter your colour: ");
 		configColours = new JComboBox<String>(coloursList);
 		shapesList = new Vector<String>();
 		addShapes();
+		shapeLabel = new JLabel("Enter your shape: ");
 		configShapes = new JComboBox<String>(shapesList);
 		length = new JLabel("Enter length of your axis: ");
 		lengthField = new JTextField(20);
 		width = new JLabel("Enter width of your axis: ");
 		widthField = new JTextField(20);
+		timeList = new Vector<String>();
+		addTimeList();
+		timeLabel = new JLabel("Enter your time period: ");
+		configTimeList = new JComboBox<String>(timeList);
 		button = new JButton("Done");
         button.addActionListener(this);
         mapToShapes();
         mapToColours();
         panel = new JPanel();
+        panel.add(timeLabel);
+        panel.add(configTimeList);
+        panel.add(colourLabel);
         panel.add(configColours);
+        panel.add(shapeLabel);
         panel.add(configShapes);
         panel.add(length);
         panel.add(lengthField);
@@ -69,6 +84,11 @@ public class ConfigureWindow implements ActionListener {
     	frame.setVisible(true);
 	}
 	
+	private void addTimeList() {
+		timeList.add("Yearly");
+		timeList.add("Monthly");
+	}
+
 	private void addShapes() {
 		shapesList.add("Circle");
 		shapesList.add("Square");
@@ -111,8 +131,9 @@ public class ConfigureWindow implements ActionListener {
 			Shape shape = this.visualization.shapes.get(configShapes.getSelectedItem());
 			int width = Integer.parseInt(widthField.getText()); 
 			int length = Integer.parseInt(lengthField.getText());
+			String timePeriod = configTimeList.getSelectedItem().toString();
 			this.userInterface.removeConfiguredVisualization(visualization_type, viz_value);
-			this.userInterface.createConfiguredChart(color, shape, width, length, visualization_type, viz_value);
+			this.userInterface.createConfiguredChart(color, shape, width, length, visualization_type, viz_value, timePeriod);
 			System.out.println(viz_value);
 			System.out.println(visualization_type);
 		}

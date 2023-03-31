@@ -111,6 +111,19 @@ public class Visualization extends JPanel{
 		return avg;
 		
 	}
+	public double getAverageForMonth(DataForRegion data, int month, int year) {
+		double sum = 0;
+		int count = 0;
+		for(int i = 0; i < data.values.size(); i++) {
+			if(Integer.parseInt(data.dates.get(i).substring(5, 7)) == month && Integer.parseInt(data.dates.get(i).substring(0, 4)) == year) {
+				sum += Double.parseDouble(data.values.get(i));
+				count++;
+			}
+		}
+		double avg = sum / count;
+		return avg;
+		
+	}
 	
 	public JPanel CreateAddData(ArrayList<DataForRegion> dataRegion) {
 		return new JPanel();
@@ -118,6 +131,15 @@ public class Visualization extends JPanel{
 	
 	public JPanel CreateConfiguredChart(Color c, Shape shape, int width, int length, ArrayList<DataForRegion> dataRegionList2) {
 		return new JPanel();
+	}
+	
+	public JPanel createMonthlyChart(DataForRegion dataForRegion) {
+		return new JPanel();
+	}
+
+	public JPanel createMonthly(Color color, Shape shape, int width, int length,
+			ArrayList<DataForRegion> dataRegionList2) {
+		return null;
 	}
 	
 	

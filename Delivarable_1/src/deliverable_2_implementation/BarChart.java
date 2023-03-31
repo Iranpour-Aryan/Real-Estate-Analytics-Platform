@@ -19,7 +19,9 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Year;
 
 public class BarChart extends Visualization{
@@ -89,7 +91,7 @@ public class BarChart extends Visualization{
 //		plot.mapDatasetToRangeAxis(firstNum, secondNum); // 2nd dataset to 2nd y-axis
 //		firstNum++;
 //		secondNum++;
-		chart = new JFreeChart("Values for region "+ data.region,
+		JFreeChart chart = new JFreeChart("Values for region "+ data.region,
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
 		ChartPanel chartPanel = new ChartPanel(chart);
@@ -102,6 +104,7 @@ public class BarChart extends Visualization{
 	}
 	
 	public JPanel CreateConfiguredChart(Color color, Shape shape, int width, int length,  ArrayList<DataForRegion> dataRegionList) {
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         int year = 0;
         int nowYear = 0;
         for(int a = 0; a < dataRegionList.size(); a++) {
@@ -121,9 +124,44 @@ public class BarChart extends Visualization{
     		plot.setDataset(1, dataset);
         }
         
-		chart = new JFreeChart("Values for regions",
+		JFreeChart chart = new JFreeChart("Values for regions",
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
+		ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new Dimension(width, length));
+		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		chartPanel.setBackground(Color.white);
+		
+		return chartPanel;
+	}
+	public JPanel createMonthly(Color color, Shape shape, int width, int length, ArrayList<DataForRegion> dataRegionList) {
+		int month = 0;
+		int nowMonth = 0;
+		int year = 0;
+		int nowYear = 0;
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+		for(int a = 0; a < dataRegionList.size(); a++) {
+			DataForRegion data = dataRegionList.get(a);
+			for(int i = 0; i < data.values.size(); i++) {
+				month = Integer.parseInt(data.dates.get(i).substring(5, 7));
+				year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+	        	if(month != nowMonth || year != nowYear) {
+	        		nowMonth = month;
+					nowYear = year;
+	        		double avg = this.getAverageForMonth(data,Integer.parseInt(data.dates.get(i).substring(5, 7)), year);
+	        		dataset.setValue(avg, "Values for " + data.region, data.dates.get(i).substring(5, 7) + data.dates.get(i).substring(0,4));
+	        	}
+	        }
+			BarRenderer barrenderer1 = new BarRenderer();
+        	barrenderer1.setSeriesPaint(0, color);
+//			splinerenderer2.setSeriesShape(0,  shape);
+//
+			plot.setDataset(0, dataset);
+			plot.setRenderer(0, barrenderer1);
+		}
+		JFreeChart chart = new JFreeChart("Values for regions",
+				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
 		ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new Dimension(width, length));

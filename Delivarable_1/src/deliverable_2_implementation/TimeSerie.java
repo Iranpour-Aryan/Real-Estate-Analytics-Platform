@@ -11,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -92,7 +93,7 @@ public class TimeSerie extends Visualization{
 		plot.mapDatasetToRangeAxis(firstNum, secondNum); // 2nd dataset to 2nd y-axis
 		firstNum++;
 		secondNum++;
-		chart = new JFreeChart("Values for regions",
+		JFreeChart chart = new JFreeChart("Values for regions",
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
 		ChartPanel chartPanel = new ChartPanel(chart);
@@ -103,36 +104,8 @@ public class TimeSerie extends Visualization{
 		return chartPanel;
 
 	}
-	public JPanel CreateAddDataMonthly(ArrayList<DataForRegion> dataRegionList) {
-		DataForRegion data = dataRegionList.get(dataRegionList.size() - 1);
-        TimeSeries series = new TimeSeries("Values for Region " + data.region);
-		int year = 0;
-		int nowYear = 0;
-		for(int i = 0; i < data.values.size(); i++) {
-			year = Integer.parseInt(data.dates.get(i).substring(0, 4));
-			if(year != nowYear) {
-				nowYear = year;
-				double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(5, 7)));
-				series.add(new Month(Integer.parseInt(data.dates.get(i).substring(5, 7)),Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
-			}
-		}
-		TimeSeriesCollection dataset1 = new TimeSeriesCollection();
-		dataset1.addSeries(series);
-		XYSplineRenderer splinerenderer2 = new XYSplineRenderer();
-		plot.setDataset(0, dataset1);
-		plot.setRenderer(0, splinerenderer2);
-		
-		chart = new JFreeChart("Values for regions",
-				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
-		ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new Dimension(400, 300));
-		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-		chartPanel.setBackground(Color.white);
-		
-		return chartPanel;
-	}
-
+	
 	public JPanel CreateConfiguredChart(Color color, Shape shape, int width, int length, ArrayList<DataForRegion> dataRegionList) {
 		int year = 0;
 		int nowYear = 0;
@@ -156,7 +129,7 @@ public class TimeSerie extends Visualization{
 			plot.setDataset(0, dataset1);
 			plot.setRenderer(0, splinerenderer2);
 		}
-		chart = new JFreeChart("Values for regions",
+		JFreeChart chart = new JFreeChart("Values for regions",
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
 		ChartPanel chartPanel = new ChartPanel(chart);
@@ -167,5 +140,44 @@ public class TimeSerie extends Visualization{
 		return chartPanel;
 	}
 	
+	public JPanel createMonthly(Color color, Shape shape, int width, int length, ArrayList<DataForRegion> dataRegionList) {
+		int month = 0;
+		int nowMonth = 0;
+		int year = 0;
+		int nowYear = 0;
+		TimeSeriesCollection dataset1 = new TimeSeriesCollection();
+//		XYPlot plot = new XYPlot();
+		for(int a = 0; a < dataRegionList.size(); a++) {
+			DataForRegion data = dataRegionList.get(a);
+			TimeSeries series = new TimeSeries("Values for Region " + data.region);
+			for(int i = 0; i < data.values.size(); i++) {
+				month = Integer.parseInt(data.dates.get(i).substring(5, 7));
+				year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+	        	if(month != nowMonth || year != nowYear) {
+	        		nowMonth = month;
+					nowYear = year;
+	        		double avg = this.getAverageForMonth(data,Integer.parseInt(data.dates.get(i).substring(5, 7)), year);
+					series.add(new Month(Integer.parseInt(data.dates.get(i).substring(5, 7)),Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+	        	}
+	        }
+			dataset1.addSeries(series);
+			XYSplineRenderer splinerenderer2 = new XYSplineRenderer();
+			splinerenderer2.setSeriesPaint(0, color);
+			splinerenderer2.setSeriesShape(0,  shape);
+//
+			plot.setDataset(0, dataset1);
+			plot.setRenderer(0, splinerenderer2);
+		}
+		JFreeChart chart = new JFreeChart("Values for regions",
+				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
+
+		ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new Dimension(width, length));
+		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		chartPanel.setBackground(Color.white);
+		
+		return chartPanel;
+	}
+
 	
 }

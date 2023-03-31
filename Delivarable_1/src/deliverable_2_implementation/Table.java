@@ -145,7 +145,7 @@ public class Table {
 	
 	private void calStdDev(DataForRegion d) {
 		for(int i = 0; i < d.values.size(); i++) {
-			stdDev += Math.pow(Double.parseDouble(d.values.get(i)) - avgVal, 2);
+			stdDev += Math.pow(Double.parseDouble(d.values.get(1)) - avgVal, 2);
 		}
 		stdDev = Math.sqrt(stdDev / d.values.size()); 
 	}

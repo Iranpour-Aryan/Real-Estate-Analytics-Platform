@@ -20,6 +20,7 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.XYShapeRenderer;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
+import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.Year;
@@ -30,7 +31,8 @@ public class ScatterChart extends Visualization{
 	JFreeChart chart;
 	int firstNum = 0;
 	int secondNum = 0;
-	
+	XYShapeRenderer itemrenderer1;
+
 	public JPanel createNewChart(ArrayList<DataForRegion> dataRegionList) {
         DataForRegion data = dataRegionList.get(dataRegionList.size() - 1);
         TimeSeries series1 = new TimeSeries("Values for Region " + data.region);
@@ -49,7 +51,7 @@ public class ScatterChart extends Visualization{
 
 
 		plot = new XYPlot();
-		XYShapeRenderer itemrenderer1 = new XYShapeRenderer();
+		itemrenderer1 = new XYShapeRenderer();
 //		XYItemRenderer itemrenderer2 = new XYLineAndShapeRenderer(false, true);
 
 		plot.setDataset(0, dataset);
@@ -93,7 +95,7 @@ public class ScatterChart extends Visualization{
 //		plot.mapDatasetToRangeAxis(firstNum, secondNum); // 2nd dataset to 2nd y-axis
 		firstNum++;
 		secondNum++;
-		chart = new JFreeChart("Values for regions",
+		JFreeChart chart = new JFreeChart("Values for regions",
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
 		ChartPanel chartPanel = new ChartPanel(chart);
@@ -128,7 +130,46 @@ public class ScatterChart extends Visualization{
 			plot.setDataset(0, dataset1);
 			plot.setRenderer(0, itemrenderer2);
 		}
-		chart = new JFreeChart("Values for regions",
+		JFreeChart chart = new JFreeChart("Values for regions",
+				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
+
+		ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new Dimension(width, length));
+		chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+		chartPanel.setBackground(Color.white);
+		
+		return chartPanel;
+	}
+	
+	public JPanel createMonthly(Color color, Shape shape, int width, int length, ArrayList<DataForRegion> dataRegionList) {
+		int month = 0;
+		int nowMonth = 0;
+		int year = 0;
+		int nowYear = 0;
+		TimeSeriesCollection dataset1 = new TimeSeriesCollection();
+//		XYPlot plot = new XYPlot();
+		for(int a = 0; a < dataRegionList.size(); a++) {
+			DataForRegion data = dataRegionList.get(a);
+			TimeSeries series = new TimeSeries("Values for Region " + data.region);
+			for(int i = 0; i < data.values.size(); i++) {
+				month = Integer.parseInt(data.dates.get(i).substring(5, 7));
+				year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+	        	if(month != nowMonth || year != nowYear) {
+	        		nowMonth = month;
+					nowYear = year;
+	        		double avg = this.getAverageForMonth(data,Integer.parseInt(data.dates.get(i).substring(5, 7)), year);
+					series.add(new Month(Integer.parseInt(data.dates.get(i).substring(5, 7)),Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+	        	}
+	        }
+			dataset1.addSeries(series);
+			XYShapeRenderer itemrenderer2 = new XYShapeRenderer();
+			itemrenderer2.setSeriesPaint(0, color);
+			itemrenderer2.setSeriesShape(0,  shape);
+//
+			plot.setDataset(1, dataset1);
+			plot.setRenderer(1, itemrenderer2);
+		}
+		JFreeChart chart = new JFreeChart("Values for regions",
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
 
 		ChartPanel chartPanel = new ChartPanel(chart);

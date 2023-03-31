@@ -19,31 +19,32 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Remove;
 
-public class WekaTimeSeriesPrediction {
-	public WekaTimeSeriesPrediction(Vector<String> values, Vector<String> dates, int months) throws Exception {
+public class WekaTimeSeriesPrediction extends WekaMethods{
+	
+	public void buildMethod(Vector<String> values, Vector<String> dates, int months) throws Exception{
 		ArrayList<Attribute> attributes = new ArrayList<>();
-		attributes.add(new Attribute("Timestamp"));
-		attributes.add(new Attribute("Value"));
+	    attributes.add(new Attribute("Timestamp"));
+	    attributes.add(new Attribute("Value"));
 
-		// Create the dataset
-		Instances data = new Instances("time_series", attributes, values.size());
-		data.setClassIndex(data.numAttributes() - 1); // Set the class attribute index
+	    // Create the dataset
+	    Instances data = new Instances("time_series", attributes, values.size());
+	    data.setClassIndex(data.numAttributes() - 1); // Set the class attribute index
 
-		// Convert the date strings to timestamps
-		List<Long> timestamps = new ArrayList<>();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		for (int i = 0; i < dates.size(); i++) {
-		    String dateString = dates.get(i);
-		    Date date = dateFormat.parse(dateString);
-		    long timestamp = date.getTime();
-		    timestamps.add(timestamp);
+	    // Convert the date strings to timestamps
+	    List<Long> timestamps = new ArrayList<>();
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	    for (int i = 0; i < dates.size(); i++) {
+	        String dateString = dates.get(i);
+	        Date date = dateFormat.parse(dateString);
+	        long timestamp = date.getTime();
+	        timestamps.add(timestamp);
 
-		    // Add the instance to the dataset
-		    Instance instance = new DenseInstance(attributes.size());
-		    instance.setValue(attributes.get(0), timestamp);
-		    instance.setValue(attributes.get(1), Double.parseDouble(values.get(i)));
-		    data.add(instance);
-		}
+	        // Add the instance to the dataset
+	        Instance instance = new DenseInstance(attributes.size());
+	        instance.setValue(attributes.get(0), timestamp);
+	        instance.setValue(attributes.get(1), Double.parseDouble(values.get(i)));
+	        data.add(instance);
+	    }
 
 	    // Convert the time series data to the required format
 	    Filter filter = new weka.filters.unsupervised.attribute.TimeSeriesDelta();
@@ -80,5 +81,5 @@ public class WekaTimeSeriesPrediction {
 	    double prediction = lin.classifyInstance(newInstance);
 	    System.out.println("Predicted value: " + prediction);
 	}
-}
 
+}
