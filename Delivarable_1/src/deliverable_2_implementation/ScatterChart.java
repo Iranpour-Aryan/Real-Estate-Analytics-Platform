@@ -147,7 +147,7 @@ public class ScatterChart extends Visualization{
 		int year = 0;
 		int nowYear = 0;
 		TimeSeriesCollection dataset1 = new TimeSeriesCollection();
-//		XYPlot plot = new XYPlot();
+		XYPlot plot = new XYPlot();
 		for(int a = 0; a < dataRegionList.size(); a++) {
 			DataForRegion data = dataRegionList.get(a);
 			TimeSeries series = new TimeSeries("Values for Region " + data.region);
@@ -168,6 +168,10 @@ public class ScatterChart extends Visualization{
 //
 			plot.setDataset(1, dataset1);
 			plot.setRenderer(1, itemrenderer2);
+			DateAxis domainAxis = new DateAxis("Year");
+			plot.setDomainAxis(domainAxis);
+			plot.setRangeAxis(new NumberAxis("Values"));
+			
 		}
 		JFreeChart chart = new JFreeChart("Values for regions",
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
