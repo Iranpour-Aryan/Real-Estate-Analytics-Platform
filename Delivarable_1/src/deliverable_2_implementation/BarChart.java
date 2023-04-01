@@ -139,6 +139,7 @@ public class BarChart extends Visualization{
 		int nowMonth = 0;
 		int year = 0;
 		int nowYear = 0;
+		CategoryPlot plot = new CategoryPlot();
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
 		for(int a = 0; a < dataRegionList.size(); a++) {
@@ -159,6 +160,9 @@ public class BarChart extends Visualization{
 //
 			plot.setDataset(0, dataset);
 			plot.setRenderer(0, barrenderer1);
+			CategoryAxis domainAxis = new CategoryAxis("Year");
+			plot.setDomainAxis(domainAxis);
+			plot.setRangeAxis(new NumberAxis("Values"));
 		}
 		JFreeChart chart = new JFreeChart("Values for regions",
 				new Font("Serif", java.awt.Font.BOLD, 18), plot, true);
