@@ -17,6 +17,7 @@ import java.awt.GridLayout;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
@@ -199,9 +200,16 @@ public class UserInterface extends JFrame implements ActionListener{
 
 	}
 	
-	public void createMonthlyData(DataForRegion dataForRegion) {
-		
-		this.visualization.createMonthlyChart(dataForRegion);
+	public void createMonthlyData(DataForRegion dataForRegion, String vis_value) {
+		Visualization vis = this.visualization.getVisualization().get(this.visualization.getVisualization().size()-1);
+		visualization.removeVisualization(vis);
+		JPanel remove_panel = mapToPanel.get(vis_value);
+		this.remove(remove_panel);
+		visualization.addVisualization(vis);
+		JPanel new_panel = vis.createMonthly(Color.black,  new Ellipse2D.Double(-3.0, -3.0, 6.0, 6.0),300,400,this.visualization.getDataRegion());
+		this.add(new_panel, BorderLayout.WEST);
+		mapToPanel.put(vis_value, new_panel);
+		this.validate();
 	}
 	
 	public void addToVisualization(Visualization visualization_addition) {
@@ -300,7 +308,7 @@ public class UserInterface extends JFrame implements ActionListener{
         	String visualization_value = viewsList.getSelectedItem().toString();
         	String method = forecastingMethods.getSelectedItem().toString();
         	WekaMethods wekaMethod = wekaMethods.get(method);
-        	InternalWindow window = new InternalWindow(wekaMethod, visualization, this, data);
+        	InternalWindow window = new InternalWindow(wekaMethod, visualization, this, data, visualization_value);
         }
         if (e.getSource() == compare) {
 			new InternalWindow(data);

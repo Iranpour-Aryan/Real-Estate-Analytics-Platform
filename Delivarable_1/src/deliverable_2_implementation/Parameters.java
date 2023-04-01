@@ -25,6 +25,8 @@ public class Parameters {
 		endDate = this.endYear + "-";
 		if (Integer.parseInt(startMonth) < 10) {
 			startDate += "0";
+		}
+		if(Integer.parseInt(endMonth) < 10) {
 			endDate += "0";
 		}
 		startDate += this.startMonth + "-01";

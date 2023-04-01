@@ -9,7 +9,7 @@ public class WekaMethods {
 		
 	}
 	
-	public void buildMethod(Vector<String> values, Vector<String> dates, int months) throws Exception {
+	public void buildMethod(DataForRegion data, int months) throws Exception {
 		
 	}
 

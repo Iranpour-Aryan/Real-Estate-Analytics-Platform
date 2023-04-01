@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
@@ -16,15 +17,18 @@ import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.SerializationHelper;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Remove;
 
 public class WekaTimeSeriesPrediction extends WekaMethods{
 	
-	public void buildMethod(Vector<String> values, Vector<String> dates, int months) throws Exception{
-		ArrayList<Attribute> attributes = new ArrayList<>();
+	public void buildMethod(DataForRegion datas, int months) throws Exception{
+	    ArrayList<Attribute> attributes = new ArrayList<>();
 	    attributes.add(new Attribute("Timestamp"));
 	    attributes.add(new Attribute("Value"));
+	    Vector<String> values = datas.values;
+	    Vector<String> dates = datas.dates;
 
 	    // Create the dataset
 	    Instances data = new Instances("time_series", attributes, values.size());
@@ -79,7 +83,31 @@ public class WekaTimeSeriesPrediction extends WekaMethods{
 	    // Make predictions on new data
 	    Instance newInstance = filteredTestData.lastInstance();
 	    double prediction = lin.classifyInstance(newInstance);
-	    System.out.println("Predicted value: " + prediction);
+//	    System.out.println("Predicted value: " + prediction);
+
+	    // Loop through and get the predicted value for each future month
+	    for (int i = 1; i <= months; i++) {
+	        // Create a new instance with the timestamp of the next month
+	        Instance newMonthInstance = new DenseInstance(filteredTestData.numAttributes());
+	        long nextMonthTimestamp = timestamps.get(timestamps.size() - 1) + (i * 2629746000L); // 1 month = 2629746000L milliseconds
+	        newMonthInstance.setValue(0, nextMonthTimestamp);
+
+	        // Use the linear regression model to predict the value for the next month
+	        double nextMonthPrediction = lin.classifyInstance(newMonthInstance);
+	        values.add(String.valueOf(nextMonthPrediction));
+	        int dateMonth = Integer.parseInt(dates.get(dates.size()-1).substring(5, 7));
+	        dateMonth = dateMonth % 12;
+	        String dateYear = dates.get(dates.size()-1).substring(0, 4);
+	        String dateString = dateYear + "-";
+	        if(dateMonth < 10) {
+	        	dateString += "0";
+	        }
+	        dateString += (dateMonth + 1) + "-01";
+	        dates.add(dateString);
+	        System.out.println("Predicted value for month " + (i) + ": " + nextMonthPrediction);
+	    }
 	}
+
+	
 
 }

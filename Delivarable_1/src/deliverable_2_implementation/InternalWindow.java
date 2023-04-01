@@ -37,13 +37,15 @@ public class InternalWindow extends JFrame implements ActionListener{
 	private JComboBox<String> fromListYears;
 	private JComboBox<String> toListMonths;
 	private JComboBox<String> toListYears;
+	String vis_value;
 	
 	JButton button2;
 	private JComboBox<DataForRegion> firstSelection;
 	private JComboBox<DataForRegion> secondSelection;
 	private JLabel result;
 	
-	public InternalWindow(WekaMethods wekaMethod, Visualization visualization, UserInterface userInterface, DataLoading data) {
+	public InternalWindow(WekaMethods wekaMethod, Visualization visualization, UserInterface userInterface, DataLoading data, String visualization_value) {
+		this.vis_value = visualization_value;
 		this.userInterface = userInterface;
 		this.wekaMethods = wekaMethod;
 		Vector<DataForRegion> dataList = new Vector<>();
@@ -152,8 +154,9 @@ public class InternalWindow extends JFrame implements ActionListener{
 		if(e.getSource() == button) {
 			DataForRegion dataRegion = (DataForRegion) firstSelection.getSelectedItem();
 			try {
-				this.userInterface.createMonthlyData(dataRegion);
-				wekaMethods.buildMethod(dataRegion.values,dataRegion.dates, getNumMonths(inputBox.getText()));
+//				this.userInterface.createMonthlyData(dataRegion,this.vis_value);
+				wekaMethods.buildMethod(dataRegion, getNumMonths(inputBox.getText()));
+				this.userInterface.createMonthlyData(dataRegion, this.vis_value);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

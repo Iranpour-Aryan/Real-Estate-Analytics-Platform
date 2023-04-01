@@ -30,6 +30,7 @@ public class TimeSerie extends Visualization{
 	int firstNum = 0;
 	int secondNum = 0;
 	XYSplineRenderer splinerenderer1;
+	TimeSeriesCollection dataset1;
 	public JPanel createNewChart(ArrayList<DataForRegion> dataRegionList) {
         DataForRegion data = dataRegionList.get(dataRegionList.size() - 1);
         TimeSeries series1 = new TimeSeries("Values for Region" + data.region);

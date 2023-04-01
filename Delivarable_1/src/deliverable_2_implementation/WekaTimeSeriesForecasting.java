@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
@@ -18,38 +19,43 @@ import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
 
 public class WekaTimeSeriesForecasting extends WekaMethods{
 	
-	public void buildMethod(Vector<String> values, Vector<String> dates, int months) throws Exception {
+	public void buildMethod(DataForRegion datas, int months) throws Exception {
 	    // Create the attribute list
 	    ArrayList<Attribute> attributes = new ArrayList<>();
 	    attributes.add(new Attribute("Timestamp"));
 	    attributes.add(new Attribute("Value"));
 	    
-	    // Create the dataset
+	    Vector<String> values = datas.values;
+	    Vector<String> dates = datas.dates;
+	    
 	    Instances data = new Instances("time_series", attributes, values.size());
 
-	    // Convert the date strings to timestamps
-	    List<Long> timestamps = new ArrayList<>();
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	    for (int i = 0; i < dates.size(); i++) {
-	        String dateString = dates.get(i);
-	        Date date = dateFormat.parse(dateString);
-	        long timestamp = date.getTime();
-	        timestamps.add(timestamp);
-//	        System.out.println(timestamp);
-	        // Add the instance to the dataset
-	        Instance instance = new DenseInstance(attributes.size());
-	        instance.setValue(attributes.get(0), timestamp);
-	        instance.setValue(attributes.get(1), Double.parseDouble(values.get(i)));
-	        data.add(instance);
-	        System.out.println(instance);
-	    }
+	 // Convert the date strings to timestamps
+	 List<Long> timestamps = new ArrayList<>();
+	 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	 HashSet<String> uniqueDates = new HashSet<>(); // To remove duplicates
+	 for (int i = 0; i < dates.size(); i++) {
+	     String dateString = dates.get(i);
+	     if (uniqueDates.contains(dateString)) continue; // Skip duplicates
+	     uniqueDates.add(dateString);
+	     Date date = dateFormat.parse(dateString);
+	     long timestamp = date.getTime();
+	     timestamps.add(timestamp);
 
-	    // Sort the instances by timestamp
-	    data.sort(1);
+	     // Add the instance to the dataset
+	     Instance instance = new DenseInstance(attributes.size());
+	     instance.setValue(attributes.get(0), timestamp);
+	     instance.setValue(attributes.get(1), Double.parseDouble(values.get(i)));
+	     data.add(instance);
+	 }
+
+	 // Sort the instances by timestamp
+	 data.sort(0);
 
 	    // Set the class attribute index
 	    data.setClassIndex(data.numAttributes() - 1);
@@ -78,9 +84,18 @@ public class WekaTimeSeriesForecasting extends WekaMethods{
 	    for (int i = 0; i < numMonthsToForecast; i++) {
 	        List<NumericPrediction> predsAtStep = forecast.get(i);
 	        NumericPrediction predForTarget = predsAtStep.get(0);
+	        values.add(String.valueOf(predForTarget.predicted()));
+	        int dateMonth = Integer.parseInt(dates.get(dates.size()-1).substring(5, 7));
+	        dateMonth = dateMonth % 12;
+	        String dateYear = dates.get(dates.size()-1).substring(0, 4);
+	        String dateString = dateYear + "-";
+	        if(dateMonth < 10) {
+	        	dateString += "0";
+	        }
+	        dateString += (dateMonth + 1) + "-01";
+	        dates.add(dateString);
 	        System.out.println("Month " + (i+1) + " predicted value: " + predForTarget.predicted());
 	    }
 	}
-
 
 }
