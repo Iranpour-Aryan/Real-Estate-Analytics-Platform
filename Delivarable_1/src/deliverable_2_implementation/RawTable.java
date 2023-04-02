@@ -2,7 +2,7 @@ package deliverable_2_implementation;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-public class RawTable extends JScrollPane implements TableStrategy{
+public class RawTable extends JScrollPane {
     
     
     public void createTable(DataForRegion dataRegion) {

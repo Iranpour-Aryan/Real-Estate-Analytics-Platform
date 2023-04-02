@@ -9,7 +9,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class SummaryTable extends JPanel implements TableStrategy {
+public class SummaryTable extends JPanel {
 	private double avgVal, stdDev, maxVal, minVal;
 
 	public SummaryTable() {
