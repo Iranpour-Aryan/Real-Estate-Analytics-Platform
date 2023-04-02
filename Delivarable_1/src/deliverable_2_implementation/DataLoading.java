@@ -1,23 +1,21 @@
 package deliverable_2_implementation;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Vector;
 
 public class DataLoading {
     private Connection connect = null;
     private Statement statement = null;
-    private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
     private ArrayList<DataForRegion> datas = new ArrayList<>();
     Table table;
     Visualization visualization;
     DataForRegion dataForRegion;
+    DataLoadingAdapter dataLoadingAdapter;
     
     public DataLoading() throws Exception {
     	
@@ -26,17 +24,12 @@ public class DataLoading {
          connect = DriverManager
                  .getConnection("jdbc:mysql://localhost:3306/database_3311", "root", "Ai1130611!"); //third column for password
 //         visualization = new Visualization();
+         dataLoadingAdapter = new DataLoadingAdapter(this);
 
     }
 
     public void readDataBase() throws Exception {
         try {
-//            // This will load the MySQL driver, each DB has its own driver
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-//            // Setup the connection with the DB
-//            connect = DriverManager
-//                    .getConnection("jdbc:mysql://localhost:3306/database_3311", "root", ""); //third column for password
-
             // Statements allow to issue SQL queries to the database
             Statement stmnt = connect.createStatement();
             stmnt
@@ -85,9 +78,6 @@ public class DataLoading {
         while (rst.next()) {
         	values.add(rst.getString(1));
         }
-        for(int i = 0; i < values.size(); i++) {
-        	System.out.println(values.get(i));
-        }
         dataForRegion = new DataForRegion();
         dataForRegion.setRegion(region);
         dataForRegion.setValues(values);
@@ -105,9 +95,6 @@ public class DataLoading {
         Vector<String> dates = new Vector<String>();
         while (rst.next()) {
         	dates.add(rst.getString(1));
-        }
-        for(int i = 0; i < dates.size(); i++) {
-        	System.out.println(dates.get(i));
         }
         dataForRegion.setDates(dates);
 //        visualization.addDataForRegion(dataForRegion);
@@ -134,7 +121,7 @@ public class DataLoading {
     }
     
     public void addToTable() {
-    	table.display(this);
+    	table.display(dataLoadingAdapter);
     }
     
     public void setVisualization(Visualization setVis) {

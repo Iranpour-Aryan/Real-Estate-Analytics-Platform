@@ -36,11 +36,11 @@ public class BarChart extends Visualization{
         int year = 0;
         int nowYear = 0;
         for(int i = 0; i < data.values.size(); i++) {
-        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+        	year = Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)));
         	if(year != nowYear) {
         		nowYear = year;
-        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
-        		dataset.setValue(avg, "Values for " + data.region, data.dates.get(i).substring(0, 4));
+        		double avg = this.getAverageForYear(data,Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i))));
+        		dataset.setValue(avg, "Values for " + data.region, ConvertStringFacade.convert("yearly", data.dates.get(i)));
         	}
         }
 		plot = new CategoryPlot();
@@ -76,11 +76,11 @@ public class BarChart extends Visualization{
         int year = 0;
         int nowYear = 0;
         for(int i = 0; i < data.values.size(); i++) {
-        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+        	year = Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)));
         	if(year != nowYear) {
         		nowYear = year;
-        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
-        		dataset.setValue(avg, "Values for " + data.region, data.dates.get(i).substring(0, 4));
+        		double avg = this.getAverageForYear(data,Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i))));
+        		dataset.setValue(avg, "Values for " + data.region, ConvertStringFacade.convert("yearly", data.dates.get(i)));
         	}
         }
         
@@ -110,11 +110,11 @@ public class BarChart extends Visualization{
         for(int a = 0; a < dataRegionList.size(); a++) {
     		DataForRegion data = dataRegionList.get(a);
         	for(int i = 0; i < data.values.size(); i++) {
-            	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+            	year = Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)));
             	if(year != nowYear) {
             		nowYear = year;
-            		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
-            		dataset.setValue(avg, "Values for " + data.region, data.dates.get(i).substring(0, 4));
+            		double avg = this.getAverageForYear(data,Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i))));
+            		dataset.setValue(avg, "Values for " + data.region, ConvertStringFacade.convert("yearly", data.dates.get(i)));
             	}
             }
         	BarRenderer barrenderer1 = new BarRenderer();
@@ -145,13 +145,13 @@ public class BarChart extends Visualization{
 		for(int a = 0; a < dataRegionList.size(); a++) {
 			DataForRegion data = dataRegionList.get(a);
 			for(int i = 0; i < data.values.size(); i++) {
-				month = Integer.parseInt(data.dates.get(i).substring(5, 7));
-				year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+				month = Integer.parseInt(ConvertStringFacade.convert("monthly", data.dates.get(i)));
+				year = Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)));
 	        	if(month != nowMonth || year != nowYear) {
 	        		nowMonth = month;
 					nowYear = year;
-	        		double avg = this.getAverageForMonth(data,Integer.parseInt(data.dates.get(i).substring(5, 7)), year);
-	        		dataset.setValue(avg, "Values for " + data.region, data.dates.get(i).substring(5, 7) + data.dates.get(i).substring(0,4));
+	        		double avg = this.getAverageForMonth(data,Integer.parseInt(ConvertStringFacade.convert("monthly", data.dates.get(i))), year);
+	        		dataset.setValue(avg, "Values for " + data.region, ConvertStringFacade.convert("monthly", data.dates.get(i)) + ConvertStringFacade.convert("yearly", data.dates.get(i)));
 	        	}
 	        }
 			BarRenderer barrenderer1 = new BarRenderer();

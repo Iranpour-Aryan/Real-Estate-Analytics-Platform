@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class ConfigureWindow implements ActionListener {
+public class ConfigureWindow implements ActionListener, WindowStrategy {
 	UserInterface userInterface;
 	JFrame frame;
 	JPanel panel;
@@ -47,41 +47,6 @@ public class ConfigureWindow implements ActionListener {
 		this.viz_value = visualization_value;
 		frame = new JFrame();
     	frame.setSize(900, 600);
-		coloursList = new Vector<String>();
-		addColours();
-		colourLabel = new JLabel("Enter your colour: ");
-		configColours = new JComboBox<String>(coloursList);
-		shapesList = new Vector<String>();
-		addShapes();
-		shapeLabel = new JLabel("Enter your shape: ");
-		configShapes = new JComboBox<String>(shapesList);
-		length = new JLabel("Enter length of your axis: ");
-		lengthField = new JTextField(20);
-		width = new JLabel("Enter width of your axis: ");
-		widthField = new JTextField(20);
-		timeList = new Vector<String>();
-		addTimeList();
-		timeLabel = new JLabel("Enter your time period: ");
-		configTimeList = new JComboBox<String>(timeList);
-		button = new JButton("Done");
-        button.addActionListener(this);
-        mapToShapes();
-        mapToColours();
-        panel = new JPanel();
-        panel.add(timeLabel);
-        panel.add(configTimeList);
-        panel.add(colourLabel);
-        panel.add(configColours);
-        panel.add(shapeLabel);
-        panel.add(configShapes);
-        panel.add(length);
-        panel.add(lengthField);
-        panel.add(width);
-        panel.add(widthField);
-        panel.add(button);
-        frame.add(panel);
-        frame.pack();
-    	frame.setVisible(true);
 	}
 	
 	private void addTimeList() {
@@ -133,10 +98,49 @@ public class ConfigureWindow implements ActionListener {
 			int length = Integer.parseInt(lengthField.getText());
 			String timePeriod = configTimeList.getSelectedItem().toString();
 			this.userInterface.removeConfiguredVisualization(visualization_type, viz_value);
+			this.userInterface.setVisParams(color, shape, width, length);
 			this.userInterface.createConfiguredChart(color, shape, width, length, visualization_type, viz_value, timePeriod);
-			System.out.println(viz_value);
-			System.out.println(visualization_type);
 		}
+		
+	}
+
+	@Override
+	public void createWindow() {
+		coloursList = new Vector<String>();
+		addColours();
+		colourLabel = new JLabel("Enter your colour: ");
+		configColours = new JComboBox<String>(coloursList);
+		shapesList = new Vector<String>();
+		addShapes();
+		shapeLabel = new JLabel("Enter your shape: ");
+		configShapes = new JComboBox<String>(shapesList);
+		length = new JLabel("Enter length of your axis: ");
+		lengthField = new JTextField(20);
+		width = new JLabel("Enter width of your axis: ");
+		widthField = new JTextField(20);
+		timeList = new Vector<String>();
+		addTimeList();
+		timeLabel = new JLabel("Enter your time period: ");
+		configTimeList = new JComboBox<String>(timeList);
+		button = new JButton("Done");
+        button.addActionListener(this);
+        mapToShapes();
+        mapToColours();
+        panel = new JPanel();
+        panel.add(timeLabel);
+        panel.add(configTimeList);
+        panel.add(colourLabel);
+        panel.add(configColours);
+        panel.add(shapeLabel);
+        panel.add(configShapes);
+        panel.add(length);
+        panel.add(lengthField);
+        panel.add(width);
+        panel.add(widthField);
+        panel.add(button);
+        frame.add(panel);
+        frame.pack();
+    	frame.setVisible(true);
 		
 	}
 

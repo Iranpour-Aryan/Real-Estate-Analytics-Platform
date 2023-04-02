@@ -102,7 +102,7 @@ public class Visualization extends JPanel{
 		double sum = 0;
 		int count = 0;
 		for(int i = 0; i < data.values.size(); i++) {
-			if(Integer.parseInt(data.dates.get(i).substring(0, 4)) == year) {
+			if(Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i))) == year) {
 				sum += Double.parseDouble(data.values.get(i));
 				count++;
 			}
@@ -115,7 +115,7 @@ public class Visualization extends JPanel{
 		double sum = 0;
 		int count = 0;
 		for(int i = 0; i < data.values.size(); i++) {
-			if(Integer.parseInt(data.dates.get(i).substring(5, 7)) == month && Integer.parseInt(data.dates.get(i).substring(0, 4)) == year) {
+			if(Integer.parseInt(ConvertStringFacade.convert("monthly", data.dates.get(i))) == month && Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i))) == year) {
 				sum += Double.parseDouble(data.values.get(i));
 				count++;
 			}
@@ -133,9 +133,9 @@ public class Visualization extends JPanel{
 		return new JPanel();
 	}
 	
-	public JPanel createMonthlyChart(DataForRegion dataForRegion) {
-		return new JPanel();
-	}
+//	public JPanel createMonthlyChart(DataForRegion dataForRegion) {
+//		return new JPanel();
+//	}
 
 	public JPanel createMonthly(Color color, Shape shape, int width, int length,
 			ArrayList<DataForRegion> dataRegionList2) {

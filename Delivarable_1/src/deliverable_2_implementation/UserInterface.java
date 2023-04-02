@@ -52,6 +52,11 @@ public class UserInterface extends JFrame implements ActionListener{
 	JButton clearData;
 	DataLoading data;
 	int count = 0;
+	Color color;
+	Shape shape;
+	int width;
+	int length;
+	DataLoadingAdapter dataLoadingAdapter;
 	
 	JPanel west;
 	Visualization piechart;
@@ -74,6 +79,7 @@ public class UserInterface extends JFrame implements ActionListener{
 		// Set window title
 		super("Country Statistics");
 		data = new DataLoading();
+		dataLoadingAdapter = new DataLoadingAdapter(data);
 
 		GridLayout gridLayout = new GridLayout(2, 2);
         setLayout(gridLayout);
@@ -83,8 +89,8 @@ public class UserInterface extends JFrame implements ActionListener{
 		// Set top bar
 		visualization = new Visualization();
 		JLabel chooseGeoParameter = new JLabel("Choose a geographical parameter: ");
-		DataLoading d = new DataLoading();
-		Vector<String> geoNames = d.getCountries();
+//		DataLoading d = new DataLoading();
+		Vector<String> geoNames = dataLoadingAdapter.getCountries();
 
 		geoList = new JComboBox<String>(geoNames);
 		
@@ -181,8 +187,8 @@ public class UserInterface extends JFrame implements ActionListener{
 	}
 	
 	private void updateButtonState() {
-		compare.setEnabled(data.getData().size() > 1);
-		clearData.setEnabled(data.getData().size() > 0);
+		compare.setEnabled(dataLoadingAdapter.getData().size() > 1);
+		clearData.setEnabled(dataLoadingAdapter.getData().size() > 0);
 	}
 	
 	private void initMapping() {
@@ -206,7 +212,7 @@ public class UserInterface extends JFrame implements ActionListener{
 		JPanel remove_panel = mapToPanel.get(vis_value);
 		this.remove(remove_panel);
 		visualization.addVisualization(vis);
-		JPanel new_panel = vis.createMonthly(Color.black,  new Ellipse2D.Double(-3.0, -3.0, 6.0, 6.0),300,400,this.visualization.getDataRegion());
+		JPanel new_panel = vis.createMonthly(this.color,this.shape, this.width, this.length, this.visualization.getDataRegion());
 		this.add(new_panel, BorderLayout.WEST);
 		mapToPanel.put(vis_value, new_panel);
 		this.validate();
@@ -227,10 +233,9 @@ public class UserInterface extends JFrame implements ActionListener{
 		
 	public void deselect(String visualization_value, Visualization vis_delete) {
 		JPanel remove_panel = mapToPanel.get(visualization_value);
-		System.out.println(remove_panel);
 		this.remove(remove_panel);
 		visualization.removeVisualization(vis_delete);
-		data.getData().removeAll(data.getData());
+		dataLoadingAdapter.getData().removeAll(dataLoadingAdapter.getData());
 		visualization.getDataRegion().removeAll(visualization.getDataRegion());
 		this.revalidate();
 		this.repaint();
@@ -256,29 +261,27 @@ public class UserInterface extends JFrame implements ActionListener{
 	
 	public void actionPerformed(ActionEvent e) {
         if(e.getSource()==addView){
-			data.setVisualization(visualization);
+        	dataLoadingAdapter.setVisualization(visualization);
         	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
         			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
         			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
-        	parameter.setDataLoading(data);
+        	parameter.setDataLoading(dataLoadingAdapter);
         	parameter.storeData();
         	parameter.sendToVisualization();
         	String visualization_value = viewsList.getSelectedItem().toString();
         	Visualization visualization_addition = mapToVisualization.get(visualization_value);
         	select(visualization_value,visualization_addition);
-            System.out.println(viewsList.getSelectedItem().toString());
         }
         if(e.getSource() == removeView) {
         	String visualization_value = viewsList.getSelectedItem().toString();
         	Visualization visualization_deletion = mapToVisualization.get(visualization_value);
         	deselect(visualization_value, visualization_deletion);
-        	System.out.println(viewsList.getSelectedItem().toString());
         }
         if(e.getSource() == load) {
         	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
         			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
         			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
-        	parameter.setDataLoading(data);
+        	parameter.setDataLoading(dataLoadingAdapter);
         	parameter.storeData();
         	parameter.sendToTable();
         	updateButtonState();
@@ -289,7 +292,7 @@ public class UserInterface extends JFrame implements ActionListener{
         	Parameters parameter = new Parameters(geoList.getSelectedItem().toString(), 
         			fromListMonths.getSelectedItem().toString(),fromListYears.getSelectedItem().toString(), 
         			toListMonths.getSelectedItem().toString(), toListYears.getSelectedItem().toString());
-        	parameter.setDataLoading(data);
+        	parameter.setDataLoading(dataLoadingAdapter);
         	parameter.storeData();
         	parameter.sendToVisualization();
         	String visualization_value = viewsList.getSelectedItem().toString();
@@ -301,20 +304,23 @@ public class UserInterface extends JFrame implements ActionListener{
         if(e.getSource() == configure) {
         	String visualization_value = viewsList.getSelectedItem().toString();
         	Visualization visualization_addition = mapToVisualization.get(visualization_value);
-        	ConfigureWindow configureWindow = new ConfigureWindow(this.visualization,visualization_addition,visualization_value, this);
+        	WindowStrategy configureWindow = new ConfigureWindow(this.visualization,visualization_addition,visualization_value, this);
+        	configureWindow.createWindow();
         }
         
         if(e.getSource() == selectMethod) {
         	String visualization_value = viewsList.getSelectedItem().toString();
         	String method = forecastingMethods.getSelectedItem().toString();
         	WekaMethods wekaMethod = wekaMethods.get(method);
-        	InternalWindow window = new InternalWindow(wekaMethod, visualization, this, data, visualization_value);
+        	WindowStrategy window = new InternalWindow(method, visualization, this, dataLoadingAdapter, visualization_value);
+        	window.createWindow();
         }
         if (e.getSource() == compare) {
-			new InternalWindow(data);
+			WindowStrategy ttestWindow = new TTestWindow(dataLoadingAdapter);
+			ttestWindow.createWindow();
 		}
         if(e.getSource() == clearData) {
-        	data.getData().removeAll(data.getData());
+        	dataLoadingAdapter.getData().removeAll(dataLoadingAdapter.getData());
         	visualization.getDataRegion().removeAll(visualization.getDataRegion());
         }
     }
@@ -330,7 +336,6 @@ public class UserInterface extends JFrame implements ActionListener{
 	public void createConfiguredChart(Color color, Shape shape, int width, int length, Visualization visualization_type, String viz_value, String timePeriod) {
 		this.visualization.addVisualization(visualization_type);
 		mapToVisualization.put(viz_value, visualization_type);
-		System.out.println(visualization_type);
 		JPanel holder;
 		if(timePeriod.equals("Yearly")) {
 			holder = visualization_type.CreateConfiguredChart(color, shape, width, length, this.visualization.dataRegionList);
@@ -341,6 +346,13 @@ public class UserInterface extends JFrame implements ActionListener{
 		this.add(holder, BorderLayout.WEST);
 		mapToPanel.put(viz_value, holder);
 		this.validate();
+	}
+
+	public void setVisParams(Color color, Shape shape, int width, int length) {
+		this.color = color;
+		this.shape = shape;
+		this.width = width;
+		this.length = length;
 	}
 
 }

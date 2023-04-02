@@ -32,16 +32,17 @@ public class TimeSerie extends Visualization{
 	XYSplineRenderer splinerenderer1;
 	TimeSeriesCollection dataset1;
 	public JPanel createNewChart(ArrayList<DataForRegion> dataRegionList) {
+		String dateType = "yearly";
         DataForRegion data = dataRegionList.get(dataRegionList.size() - 1);
         TimeSeries series1 = new TimeSeries("Values for Region" + data.region);
         int year = 0;
         int nowYear = 0;
         for(int i = 0; i < data.values.size(); i++) {
-        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+        	year = Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i)));
         	if(year != nowYear) {
         		nowYear = year;
-        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
-        		series1.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+        		double avg = this.getAverageForYear(data,Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i))));
+        		series1.add(new Year(Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i)))), avg);
         	}
         }
 
@@ -75,16 +76,17 @@ public class TimeSerie extends Visualization{
 	}
 	
 	public JPanel CreateAddData(ArrayList<DataForRegion> dataRegionList) {
+		String dateType = "yearly";
         DataForRegion data = dataRegionList.get(dataRegionList.size() - 1);
         TimeSeries series = new TimeSeries("Values for Region " + data.region);
         int year = 0;
         int nowYear = 0;
         for(int i = 0; i < data.values.size(); i++) {
-        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+        	year = Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i)));
         	if(year != nowYear) {
         		nowYear = year;
-        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
-        		series.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+        		double avg = this.getAverageForYear(data,Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i))));
+        		series.add(new Year(Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i)))), avg);
         	}
         }
 		dataset.addSeries(series);
@@ -108,6 +110,7 @@ public class TimeSerie extends Visualization{
 
 	
 	public JPanel CreateConfiguredChart(Color color, Shape shape, int width, int length, ArrayList<DataForRegion> dataRegionList) {
+		String dateType = "yearly";
 		int year = 0;
 		int nowYear = 0;
 		TimeSeriesCollection dataset1 = new TimeSeriesCollection();
@@ -115,11 +118,11 @@ public class TimeSerie extends Visualization{
 			DataForRegion data = dataRegionList.get(a);
 			TimeSeries series = new TimeSeries("Values for Region " + data.region);
 			for(int i = 0; i < data.values.size(); i++) {
-	        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+	        	year = Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i)));
 	        	if(year != nowYear) {
 	        		nowYear = year;
-	        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
-	        		series.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+	        		double avg = this.getAverageForYear(data,Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i))));
+	        		series.add(new Year(Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i)))), avg);
 	        	}
 	        }
 			dataset1.addSeries(series);
@@ -142,6 +145,7 @@ public class TimeSerie extends Visualization{
 	}
 	
 	public JPanel createMonthly(Color color, Shape shape, int width, int length, ArrayList<DataForRegion> dataRegionList) {
+		String dateType = "monthly";
 		int month = 0;
 		int nowMonth = 0;
 		int year = 0;
@@ -152,13 +156,13 @@ public class TimeSerie extends Visualization{
 			DataForRegion data = dataRegionList.get(a);
 			TimeSeries series = new TimeSeries("Values for Region " + data.region);
 			for(int i = 0; i < data.values.size(); i++) {
-				month = Integer.parseInt(data.dates.get(i).substring(5, 7));
-				year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+				month = Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i)));
+				year = Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)));
 	        	if(month != nowMonth || year != nowYear) {
 	        		nowMonth = month;
 					nowYear = year;
-	        		double avg = this.getAverageForMonth(data,Integer.parseInt(data.dates.get(i).substring(5, 7)), year);
-					series.add(new Month(Integer.parseInt(data.dates.get(i).substring(5, 7)),Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+	        		double avg = this.getAverageForMonth(data,Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i))), year);
+					series.add(new Month(Integer.parseInt(ConvertStringFacade.convert(dateType, data.dates.get(i))),Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)))), avg);
 	        	}
 	        }
 			dataset1.addSeries(series);

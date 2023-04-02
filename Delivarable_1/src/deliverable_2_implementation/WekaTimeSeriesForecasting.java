@@ -22,7 +22,7 @@ import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSource;
 
-public class WekaTimeSeriesForecasting extends WekaMethods{
+public class WekaTimeSeriesForecasting implements WekaMethods{
 	
 	public void buildMethod(DataForRegion datas, int months) throws Exception {
 	    // Create the attribute list
@@ -94,7 +94,6 @@ public class WekaTimeSeriesForecasting extends WekaMethods{
 	        }
 	        dateString += (dateMonth + 1) + "-01";
 	        dates.add(dateString);
-	        System.out.println("Month " + (i+1) + " predicted value: " + predForTarget.predicted());
 	    }
 	}
 

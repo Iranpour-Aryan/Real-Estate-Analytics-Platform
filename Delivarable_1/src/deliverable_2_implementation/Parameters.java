@@ -1,8 +1,7 @@
 package deliverable_2_implementation;
 
-import java.util.HashMap;
-
 public class Parameters {
+	DataLoadingAdapter dataLoadingAdapter;
 	DataLoading data;
 	DataForRegion dataRegion[];
 	String region;
@@ -19,8 +18,6 @@ public class Parameters {
 		this.startYear = startYear;
 		this.endMonth = endMonth;
 		this.endYear = endYear;
-		System.out.println("Region: " + this.region + " From " + this.startMonth + ":" + this.startYear + " To "
-				+ this.endMonth + ":" + this.endYear);
 		startDate = this.startYear + "-";
 		endDate = this.endYear + "-";
 		if (Integer.parseInt(startMonth) < 10) {
@@ -38,7 +35,7 @@ public class Parameters {
 	public void storeData() {
 		try {
 			boolean check = false;
-			for (DataForRegion d : data.getData()) {
+			for (DataForRegion d : this.dataLoadingAdapter.getData()) {
 				if (d.region.equals(region) && d.dates.get(0).equals(startDate)
 						&& d.dates.get(d.dates.size() - 1).equals(endDate)) {
 					check = true;
@@ -46,9 +43,8 @@ public class Parameters {
 				}
 			}
 			if (!check) {
-				System.out.println(this.region);
-				data.getValues(this.region, this.startDate, this.endDate);
-				data.putData();
+				this.dataLoadingAdapter.getValues(this.region, this.startDate, this.endDate);
+				this.dataLoadingAdapter.putData();
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -57,15 +53,16 @@ public class Parameters {
 	}
 
 	public void sendToTable() {
-		data.addToTable();
+		this.dataLoadingAdapter.addToTable();
 	}
 
 	public void sendToVisualization() {
-		data.addToVisualization();
+		this.dataLoadingAdapter.addToVisualization();
 	}
 
-	public void setDataLoading(DataLoading dataLoading) {
-		data = dataLoading;
+	public void setDataLoading(DataLoadingAdapter dataLoadingAdapter) {
+		this.dataLoadingAdapter = dataLoadingAdapter;
+		
 	}
 
 }

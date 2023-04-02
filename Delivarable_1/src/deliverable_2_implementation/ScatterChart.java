@@ -39,11 +39,11 @@ public class ScatterChart extends Visualization{
         int year = 0;
         int nowYear = 0;
         for(int i = 0; i < data.values.size(); i++) {
-        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+        	year = Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)));
         	if(year != nowYear) {
         		nowYear = year;
-        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
-        		series1.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+        		double avg = this.getAverageForYear(data,Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i))));
+        		series1.add(new Year(Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)))), avg);
         	}
         }
 		dataset = new TimeSeriesCollection();
@@ -81,11 +81,11 @@ public class ScatterChart extends Visualization{
         int year = 0;
         int nowYear = 0;
         for(int i = 0; i < data.values.size(); i++) {
-        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+        	year = Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)));
         	if(year != nowYear) {
         		nowYear = year;
-        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
-        		series.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+        		double avg = this.getAverageForYear(data,Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i))));
+        		series.add(new Year(Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)))), avg);
         	}
         }
 		dataset.addSeries(series);
@@ -115,11 +115,11 @@ public class ScatterChart extends Visualization{
 			DataForRegion data = dataRegionList.get(a);
 			TimeSeries series = new TimeSeries("Values for Region " + data.region);
 			for(int i = 0; i < data.values.size(); i++) {
-	        	year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+	        	year = Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)));
 	        	if(year != nowYear) {
 	        		nowYear = year;
-	        		double avg = this.getAverageForYear(data,Integer.parseInt(data.dates.get(i).substring(0, 4)));
-	        		series.add(new Year(Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+	        		double avg = this.getAverageForYear(data,Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i))));
+	        		series.add(new Year(Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)))), avg);
 	        	}
 	        }
 			dataset1.addSeries(series);
@@ -152,13 +152,13 @@ public class ScatterChart extends Visualization{
 			DataForRegion data = dataRegionList.get(a);
 			TimeSeries series = new TimeSeries("Values for Region " + data.region);
 			for(int i = 0; i < data.values.size(); i++) {
-				month = Integer.parseInt(data.dates.get(i).substring(5, 7));
-				year = Integer.parseInt(data.dates.get(i).substring(0, 4));
+				month = Integer.parseInt(ConvertStringFacade.convert("monthly", data.dates.get(i)));
+				year = Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)));
 	        	if(month != nowMonth || year != nowYear) {
 	        		nowMonth = month;
 					nowYear = year;
-	        		double avg = this.getAverageForMonth(data,Integer.parseInt(data.dates.get(i).substring(5, 7)), year);
-					series.add(new Month(Integer.parseInt(data.dates.get(i).substring(5, 7)),Integer.parseInt(data.dates.get(i).substring(0, 4))), avg);
+	        		double avg = this.getAverageForMonth(data,Integer.parseInt(ConvertStringFacade.convert("monthly", data.dates.get(i))), year);
+					series.add(new Month(Integer.parseInt(ConvertStringFacade.convert("monthly", data.dates.get(i))),Integer.parseInt(ConvertStringFacade.convert("yearly", data.dates.get(i)))), avg);
 	        	}
 	        }
 			dataset1.addSeries(series);

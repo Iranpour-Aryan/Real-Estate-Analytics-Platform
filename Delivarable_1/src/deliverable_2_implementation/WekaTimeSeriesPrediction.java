@@ -21,7 +21,7 @@ import weka.core.SerializationHelper;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Remove;
 
-public class WekaTimeSeriesPrediction extends WekaMethods{
+public class WekaTimeSeriesPrediction implements WekaMethods{
 	
 	public void buildMethod(DataForRegion datas, int months) throws Exception{
 	    ArrayList<Attribute> attributes = new ArrayList<>();
@@ -83,7 +83,6 @@ public class WekaTimeSeriesPrediction extends WekaMethods{
 	    // Make predictions on new data
 	    Instance newInstance = filteredTestData.lastInstance();
 	    double prediction = lin.classifyInstance(newInstance);
-//	    System.out.println("Predicted value: " + prediction);
 
 	    // Loop through and get the predicted value for each future month
 	    for (int i = 1; i <= months; i++) {
@@ -104,7 +103,6 @@ public class WekaTimeSeriesPrediction extends WekaMethods{
 	        }
 	        dateString += (dateMonth + 1) + "-01";
 	        dates.add(dateString);
-	        System.out.println("Predicted value for month " + (i) + ": " + nextMonthPrediction);
 	    }
 	}
 
