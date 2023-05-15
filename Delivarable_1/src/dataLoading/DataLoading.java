@@ -24,7 +24,7 @@ public class DataLoading {
     	 Class.forName("com.mysql.cj.jdbc.Driver");
          // Setup the connection with the DB
          connect = DriverManager
-                 .getConnection("jdbc:mysql://localhost:3306/database_3311", "root", "Ai1130611!"); //third column for password
+                 .getConnection("jdbc:mysql://localhost:3306/database_3311", "root", ""); //third column for password
 //         visualization = new Visualization();
          dataLoadingAdapter = new DataLoadingAdapter(this);
 
